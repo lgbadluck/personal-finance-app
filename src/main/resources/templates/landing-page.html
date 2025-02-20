@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <meta name="description" content="" />
     <meta name="author" content="" />
-    <title>Finance Tracker</title>
+    <title>Personal Finance Tracker</title>
     <!-- Favicon-->
 
     <link rel="icon" type="image/x-icon" th:href="@{/assets/favicon.ico}" />
@@ -23,14 +23,14 @@
 </head>
 <body id="page-top">
 <!-- Navigation-->
-<div th:replace="${session.client != null} ? ~{fragments/navbar :: navbar(yes, no, no, yes, yes, yes)} : ~{fragments/navbar :: navbar(yes, yes, yes, no, no, no)}  "></div>
+<div th:replace="${session.client != null} ? ~{fragments/navbar :: navbar(yes, no, no, yes, yes, yes)} : ~{fragments/navbar :: navbar(yes, yes, yes, yes, yes, yes)}  "></div>
 <!-- Masthead-->
 <header class="masthead bg-primary text-white text-center">
     <div class="container d-flex align-items-center flex-column">
         <!-- Masthead Avatar Image-->
         <img class="masthead-avatar mb-5 pt-10" th:src="@{/assets/img/piggy-bank-svgrepo.svg}" alt="..." />
         <!-- Masthead Heading-->
-        <h1 class="masthead-heading text-uppercase mb-0">Expenses Tracker</h1>
+        <h1 class="masthead-heading text-uppercase mb-0">Personal Finance Tracker</h1>
         <!-- Icon Divider-->
         <div class="divider-custom divider-light">
             <div class="divider-custom-line"></div>
@@ -55,7 +55,7 @@
         <!-- About Section Content-->
         <div class="row">
             <div class="col-lg-4 ms-auto"><p class="lead">
-                Introducing our Personal Finance Tracker app—a simple solution for effortless
+                Introducing our Personal Finance Tracker app a simple solution for effortless
                 financial management. Track expenses, set budgets, and gain insights
                 with user-friendly features. record all your expenses and be aware of
                 you pocket.
