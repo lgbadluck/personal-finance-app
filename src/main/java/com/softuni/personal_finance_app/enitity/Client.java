@@ -17,23 +17,21 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-public class User {
+public class Client {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @Column(unique = true, nullable = false)
-    private String username;
+    @Column
+    private String firstName;
 
-    @Column(nullable = false)
-    private String password;
+    @Column
+    private String lastName;
 
-    @Column(nullable = false)
-    private Role role;
+    @Column(unique = true)
+    private String email;
 
-    @Column(nullable = false)
-    private boolean isActive;
 
     @DateTimeFormat(pattern = "dd-MM-yyyy HH:mm")
     @CreationTimestamp
@@ -43,6 +41,6 @@ public class User {
     @UpdateTimestamp
     private LocalDateTime updatedOn;
 
-    @OneToOne
-    private Client client;
+    @OneToOne(mappedBy = "client")
+    private User user;
 }
