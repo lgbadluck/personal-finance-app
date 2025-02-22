@@ -216,6 +216,12 @@ body {
   width: 15rem;
 }
 
+.error{
+  color:red;
+  font-size: 13px;
+  margin-top:-15px;
+}
+
 @media (min-width: 992px) {
   .masthead {
     padding-top: calc(6rem + 104px);

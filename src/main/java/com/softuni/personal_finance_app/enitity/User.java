@@ -10,6 +10,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 @Builder
@@ -45,4 +46,14 @@ public class User {
 
     @OneToOne
     private Client client;
+
+    @OneToMany(mappedBy = "categoryOwner")
+    private List<Category> categories;
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "user_budget",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "budget_id"))
+    private List<Budget> budgets;
 }

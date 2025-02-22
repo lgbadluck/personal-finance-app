@@ -1,14 +1,18 @@
 package com.softuni.personal_finance_app.controller;
 
+import com.softuni.personal_finance_app.enitity.User;
+import com.softuni.personal_finance_app.security.AuthenticatedUserDetails;
 import com.softuni.personal_finance_app.service.UserService;
+import com.softuni.personal_finance_app.web.dto.LoginRequest;
 import com.softuni.personal_finance_app.web.dto.RegisterRequest;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 @Controller
@@ -23,14 +27,31 @@ public class IndexController {
 
 
     @GetMapping("/")
-    public String getLandingPage(){
-        return "landing-page";
+    public ModelAndView getLandingPage(){
+
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("landing-page");
+
+        return modelAndView;
+    }
+
+    @GetMapping("/home")
+    public ModelAndView getLandingPageLoggedIn(@AuthenticationPrincipal AuthenticatedUserDetails authenticatedUserDetails){
+
+        User user = userService.getById(authenticatedUserDetails.getUserId());
+
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("landing-page");
+        modelAndView.addObject("user", user);
+
+        return modelAndView;
     }
 
     @GetMapping("/register")
     public ModelAndView getRegisterPage(){
 
-        ModelAndView modelAndView = new ModelAndView("register-page");
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("register-page");
         modelAndView.addObject("registerRequest", new RegisterRequest());
 
         return modelAndView;
@@ -50,12 +71,18 @@ public class IndexController {
     }
 
     @GetMapping("/login")
-    public ModelAndView getLoginPage(){
+    public ModelAndView getLoginPage(@RequestParam(value = "error", required = false) String errorParam){
 
-        ModelAndView modelAndView = new ModelAndView("login-page");
-        modelAndView.addObject("loginRequest", new RegisterRequest());
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("login-page");
+        modelAndView.addObject("loginRequest", new LoginRequest());
+
+        if (errorParam != null) {
+            modelAndView.addObject("errorMessage", "Incorrect username or password!");
+        }
 
         return modelAndView;
     }
+
 
 }
