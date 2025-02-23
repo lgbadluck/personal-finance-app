@@ -5,8 +5,12 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Builder
@@ -26,6 +30,15 @@ public class Expense {
     @Column(nullable = false)
     private BigDecimal amount;
 
+    @Column(nullable = false)
+    private LocalDateTime datetimeOfExpense;
+
     @ManyToOne
     private Category category;
+
+    @CreationTimestamp
+    private LocalDateTime createdOn;
+
+    @UpdateTimestamp
+    private LocalDateTime updatedOn;
 }

@@ -32,12 +32,9 @@ public class Client {
     @Column(unique = true)
     private String email;
 
-
-    @DateTimeFormat(pattern = "dd-MM-yyyy HH:mm")
     @CreationTimestamp
     private LocalDateTime createdOn;
 
-    @DateTimeFormat(pattern = "dd-MM-yyyy HH:mm")
     @UpdateTimestamp
     private LocalDateTime updatedOn;
 

@@ -65,9 +65,12 @@ public class IndexController {
             return new ModelAndView("register-page");
         }
 
-        userService.registerUser(registerRequest);
+        User user = userService.registerUser(registerRequest);
 
-        return new ModelAndView("redirect:/login");
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("redirect:/login");
+
+        return modelAndView;
     }
 
     @GetMapping("/login")

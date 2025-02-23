@@ -25,6 +25,8 @@ public class WebMvcConfiguration implements WebMvcConfigurer {
                 .authorizeHttpRequests(matchers -> matchers
                         .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
                         .requestMatchers("/", "/register").permitAll()
+                        .requestMatchers("/assets/img/piggy-bank-svgrepo.svg").permitAll()
+                        .requestMatchers("/assets/favicon.ico").permitAll()
                         .anyRequest().authenticated()
                 )
                 .formLogin(form -> form

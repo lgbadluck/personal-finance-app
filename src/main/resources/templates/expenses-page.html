@@ -72,10 +72,11 @@
                         Filters
                     </button>
 
+                    <!-- // TO DO: ADD FILTER
                     <div id="filterForm" style="display: none;margin-left: 14%;width: 127%;">
                         <form th:action="@{/processFilter}" th:object="${filter}" method="post">
                             <div class="form-group">
-                                <!-- Dropdown List for Expense Categories -->
+
                                 <label for="expenseCategory"><h6>Expense Category :</h6></label>
                                 <select id="expenseCategory" name="expenseCategory"
                                         style="width: 32%; margin-left: 20px;" th:field="*{category}">
@@ -144,6 +145,7 @@
                             <br><br>
                         </form>
                     </div>
+                    -->
                 </div>
             </div>
         </div>
@@ -153,12 +155,14 @@
         <div class="row">
             <div class="col-4 py-2" th:each="exp : ${expenseList}">
                 <div class="card h-100 border-success">
-                    <div class="card-body">
-                        <span class="hash">category : </span><span class="card-text"
-                                                                   th:text="${exp.categoryName}"></span><br>
-                        <span class="hash">amount : </span><span class="card-text" th:text="${exp.amount}"></span>$<br>
-                        <span class="hash">date : </span><span class="card-text" th:text="${exp.date}"></span><br>
-                        <span class="hash">time : </span><span class="card-text" th:text="${exp.time}"></span><br>
+                    <div class="card-body text-left">
+                        <span class="hash" >category : </span><span class="card-text"
+                                                                   th:text="${exp.category.name}"></span><br>
+                        <span class="hash">amount : </span><span class="card-text" th:text="${exp.amount}"></span> EUR<br>
+                        <span class="hash">date : </span><span class="card-text"
+                              th:text="${#temporals.format(exp.datetimeOfExpense, 'dd MMM YYYY')}"></span><br>
+                        <span class="hash">time : </span><span class="card-text"
+                              th:text="${#temporals.format(exp.datetimeOfExpense, 'HH:mm')}"></span><br>
                         <span class="hash">description : </span><span class="card-text"
                                                                       th:text="${exp.description}"></span><br>
                         <div class="text-center" style="margin-top:28px;">

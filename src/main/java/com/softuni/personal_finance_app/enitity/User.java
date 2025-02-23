@@ -31,16 +31,15 @@ public class User {
     private String password;
 
     @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private Role role;
 
     @Column(nullable = false)
     private boolean isActive;
 
-    @DateTimeFormat(pattern = "dd-MM-yyyy HH:mm")
     @CreationTimestamp
     private LocalDateTime createdOn;
 
-    @DateTimeFormat(pattern = "dd-MM-yyyy HH:mm")
     @UpdateTimestamp
     private LocalDateTime updatedOn;
 
@@ -48,6 +47,7 @@ public class User {
     private Client client;
 
     @OneToMany(mappedBy = "categoryOwner")
+    @OrderBy("createdOn ASC")
     private List<Category> categories;
 
     @ManyToMany(fetch = FetchType.EAGER)

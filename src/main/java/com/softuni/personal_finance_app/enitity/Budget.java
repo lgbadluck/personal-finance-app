@@ -5,8 +5,11 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -46,8 +49,15 @@ public class Budget {
             name = "budget_category",
             joinColumns = @JoinColumn(name = "budget_id"),
             inverseJoinColumns = @JoinColumn(name = "category_id"))
+    @OrderBy("createdOn ASC")
     private List<Category> categories;
 
     @ManyToMany(mappedBy = "budgets")
     private List<User> users;
+
+    @CreationTimestamp
+    private LocalDateTime createdOn;
+
+    @UpdateTimestamp
+    private LocalDateTime updatedOn;
 }
