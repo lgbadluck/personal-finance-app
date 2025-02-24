@@ -33,6 +33,8 @@ public class Budget {
     @Column(nullable = false)
     private BigDecimal maxToSpend;
 
+    private BigDecimal spent;
+
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private BudgetType type;
