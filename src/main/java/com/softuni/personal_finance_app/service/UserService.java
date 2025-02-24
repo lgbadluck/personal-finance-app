@@ -1,14 +1,13 @@
 package com.softuni.personal_finance_app.service;
 
-import com.softuni.personal_finance_app.enitity.Category;
-import com.softuni.personal_finance_app.enitity.Expense;
-import com.softuni.personal_finance_app.enitity.Role;
-import com.softuni.personal_finance_app.enitity.User;
+import com.softuni.personal_finance_app.enitity.*;
 import com.softuni.personal_finance_app.exception.DomainException;
 import com.softuni.personal_finance_app.repository.CategoryRepository;
+import com.softuni.personal_finance_app.repository.ClientRepository;
 import com.softuni.personal_finance_app.repository.ExpenseRepository;
 import com.softuni.personal_finance_app.repository.UserRepository;
 import com.softuni.personal_finance_app.security.AuthenticatedUserDetails;
+import com.softuni.personal_finance_app.web.dto.ClientEditRequest;
 import com.softuni.personal_finance_app.web.dto.RegisterRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -27,6 +26,7 @@ import java.util.UUID;
 public class UserService implements UserDetailsService {
 
     private final UserRepository userRepository;
+    private final ClientRepository clientRepository;
     private final ExpenseRepository expenseRepository;
 
     private final CategoryRepository categoryRepository;
@@ -36,11 +36,13 @@ public class UserService implements UserDetailsService {
 
     @Autowired
     public UserService(UserRepository userRepository,
+                       ClientRepository clientRepository,
                        ExpenseRepository expenseRepository,
                        CategoryRepository categoryRepository,
                        PasswordEncoder passwordEncoder,
                        List<String> getDefaultCategories) {
         this.userRepository = userRepository;
+        this.clientRepository = clientRepository;
         this.expenseRepository = expenseRepository;
         this.categoryRepository = categoryRepository;
         this.passwordEncoder = passwordEncoder;
@@ -56,11 +58,20 @@ public class UserService implements UserDetailsService {
             throw new RuntimeException("Username already exists: [%s]".formatted(registerRequest.getUsername()));
         }
 
+        Client client  = Client.builder()
+                .firstName(registerRequest.getFirstName())
+                .lastName(registerRequest.getLastName())
+                .email(registerRequest.getEmail())
+                .build();
+
+        clientRepository.save(client);
+
         User user = User.builder()
                 .username(registerRequest.getUsername())
                 .password(passwordEncoder.encode(registerRequest.getPassword()))
                 .role(Role.USER)
                 .isActive(true)
+                .client(client)
                 .build();
 
         return initializeUser(user);
@@ -108,5 +119,14 @@ public class UserService implements UserDetailsService {
             
         }
         return expenseList;
+    }
+
+    public void editClientDetails(User user, ClientEditRequest clientEditRequest) {
+
+        user.getClient().setFirstName(clientEditRequest.getFirstName());
+        user.getClient().setLastName(clientEditRequest.getLastName());
+        user.getClient().setEmail(clientEditRequest.getEmail());
+
+        userRepository.save(user);
     }
 }

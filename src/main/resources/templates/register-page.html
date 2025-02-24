@@ -57,11 +57,9 @@
                                          th:errors="*{password}"
                                          class="error"></div>
                                 </div>
-
-                                <!--
                                 <div class="col-12">
                                     <div class="form-floating mb-3">
-                                        <input type="text" class="form-control border-0 border-bottom rounded-0" id="firstname" placeholder="FirstName" th:field="*{firstName}" required>
+                                        <input type="text" class="form-control border-0 border-bottom rounded-0" id="firstname" placeholder="FirstName" th:field="*{firstName}">
                                         <label for="firstname" class="form-label">First name</label>
                                     </div>
                                     <div th:if="${#fields.hasErrors('firstName')}"
@@ -70,7 +68,7 @@
                                 </div>
                                 <div class="col-12">
                                     <div class="form-floating mb-3">
-                                        <input type="text" class="form-control border-0 border-bottom rounded-0" id="lastname" placeholder="LastName" th:field="*{lastName}" required>
+                                        <input type="text" class="form-control border-0 border-bottom rounded-0" id="lastname" placeholder="LastName" th:field="*{lastName}">
                                         <label for="lastname" class="form-label">Last name</label>
                                     </div>
                                     <div th:if="${#fields.hasErrors('lastName')}"
@@ -79,14 +77,14 @@
                                 </div>
                                 <div class="col-12">
                                     <div class="form-floating mb-3">
-                                        <input type="email" class="form-control border-0 border-bottom rounded-0" id="email" placeholder="Email" th:field="*{email}" required>
+                                        <input type="email" class="form-control border-0 border-bottom rounded-0" id="email" placeholder="Email" th:field="*{email}">
                                         <label for="email" class="form-label">Email</label>
                                     </div>
                                     <div th:if="${#fields.hasErrors('email')}"
                                          th:errors="*{email}"
                                          class="error"></div>
                                 </div>
-                                -->
+
                                 <div class="col-12">
                                     <div class="d-grid">
                                         <button class="btn btn-lg btn-dark rounded-0 fs-6" type="submit">Sign up</button>
