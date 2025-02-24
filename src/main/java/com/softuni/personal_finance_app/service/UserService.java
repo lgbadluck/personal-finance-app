@@ -129,4 +129,38 @@ public class UserService implements UserDetailsService {
 
         userRepository.save(user);
     }
+
+    public List<User> getAllUsers() {
+        return userRepository.findAll();
+    }
+
+    public void switchStatus(UUID userId) {
+
+        User user = getById(userId);
+
+        // НАЧИН 1:
+//        if (user.isActive()){
+//            user.setActive(false);
+//        } else {
+//            user.setActive(true);
+//        }
+
+        // false -> true
+        // true -> false
+        user.setActive(!user.isActive());
+        userRepository.save(user);
+    }
+
+    public void switchRole(UUID userId) {
+
+        User user = getById(userId);
+
+        if (user.getRole() == Role.USER) {
+            user.setRole(Role.ADMIN);
+        } else {
+            user.setRole(Role.USER);
+        }
+
+        userRepository.save(user);
+    }
 }

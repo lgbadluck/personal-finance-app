@@ -48,7 +48,7 @@
                         <select id="expenseCategory" name="expenseCategory" style="width: 32%; margin-left: 20px;" th:field="*{categoryName}" required>
                             <option th:each="category : ${user.categories}" th:value="${category.name}" th:text="${category.name}"> </option>
                         </select>
-                        <a th:href="@{/category/add}" class="btn btn-info">Add New</a>
+                        <a th:href="@{/category/add}" class="btn btn-info border-dark-subtle">Add New</a>
                     </div>
 
                     <br>
