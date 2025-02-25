@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
     <meta name="description" content=""/>
     <meta name="author" content=""/>
-    <title>Add Category</title>
+    <title>Add Budget</title>
     <!-- Favicon-->
     <link rel="icon" type="image/x-icon" th:href="@{/assets/favicon.ico}"/>
     <!-- Font Awesome icons (free version)-->
@@ -29,7 +29,7 @@
 <header class="masthead bg-primary text-white">
     <div class="container d-flex align-items-center flex-column">
         <!-- Masthead Heading-->
-        <h3 class="masthead-heading text-uppercase mb-0" style="margin-top: -55px;">Add Category</h3>
+        <h3 class="masthead-heading text-uppercase mb-0" style="margin-top: -55px;">Add Budget</h3>
         <!-- Icon Divider-->
         <div class="divider-custom divider-light">
             <div class="divider-custom-line"></div>
@@ -41,12 +41,43 @@
     <div class="d-flex flex-column justify-content-start text-left gap-10">
         <div class="container d-flex  flex-column" style="width: 75vw">
             <div class="col-md-6 offset-md-3">
-                <form th:action="@{/category}" th:method="POST" th:object="${categoryRequest}">
+                <form th:action="@{/budgets}" th:method="POST" th:object="${budgetRequest}">
                     <div class="form-group">
-                        <label for="newCategoryName" class="text-left"><h6>Category name</h6></label>
-                        <textarea class="form-control" id="newCategoryName" th:field="*{name}" rows="1"></textarea>
+                        <label for="name" class="text-left"><h6>Budget name</h6></label>
+                        <input type="text" class="form-control" id="name" th:field="*{name}" required>
                     </div>
                     <br>
+
+                    <div class="form-group">
+                        <label for="maxToSpend" class="text-left"><h6>Limit</h6></label>
+                        <input type="number" step="0.01" class="form-control" id="maxToSpend" th:field="*{maxToSpend}" required>
+                    </div>
+                    <br>
+
+                    <div class="form-group">
+                    <label for="categories"><h6>Categories:</h6></label><br/>
+                        <div th:each="category : ${user.categories}">
+                            <input type="checkbox" id="categories" th:field="*{selectedCategories}"
+                                   th:value="${category.id}"/>
+                            <label th:text="${category.name}"></label><br/></div>
+                    </div>
+                    <br>
+
+                    <div class="form-group">
+                        <label for="isRenewed"><h6>Renewable</h6></label>
+                        <input type="checkbox" id="isRenewed" th:field="*{renewed}"/><br/>
+                    </div>
+                    <br>
+
+                    <div class="form-group">
+                        <label for="BudgetType" class="text-left"><h6>Budget type</h6></label>
+                        <select name="type" id="BudgetType" th:field="*{type}">
+                            <option th:each="type : ${T(com.softuni.personal_finance_app.enitity.BudgetType).values()}" class="form-control" id="type"
+                                    th:value="${type}" th:text="${#strings.capitalize(#strings.toLowerCase(type))}"></option>
+                        </select>
+                    </div>
+                    <br>
+
                     <div class="form-group">
                         <label for="description" class="text-left"><h6>Description</h6></label>
                         <textarea class="form-control" id="description" th:field="*{description}" rows="3"></textarea>

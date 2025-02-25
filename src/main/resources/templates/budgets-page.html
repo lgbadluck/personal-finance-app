@@ -168,6 +168,12 @@
                         <span class="hash">limit : </span><span class="card-text" th:text="${budget.maxToSpend}"></span> EUR<br>
                         <span class="hash">spent : </span><span class="card-text" th:text="${budget.spent}"></span> EUR<br>
 
+                        <span class="hash">start date : </span><span class="card-text"
+                                                                      th:text="${#temporals.format(budget.createdOn, 'dd MMM YYYY')}"></span><br>
+                        <span class="hash">type : </span><span class="card-text"
+                                                                      th:text="${budget.type.name()}"></span><br>
+                        <span class="hash">status : </span><span class="card-text"
+                                                               th:text="${budget.status.name()}"></span><br>
                         <span class="hash">description : </span><span class="card-text"
                                                                       th:text="${budget.description}"></span><br>
                         <div class="text-center" style="margin-top:28px;">

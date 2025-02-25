@@ -37,7 +37,6 @@ public class CategoriesController {
     }*/
 
     @GetMapping("/add")
-
     public ModelAndView getCategoryRequestPage(@AuthenticationPrincipal AuthenticatedUserDetails authenticatedUserDetails) {
 
         User user = userService.getById(authenticatedUserDetails.getUserId());

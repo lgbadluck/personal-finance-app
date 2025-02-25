@@ -7,8 +7,8 @@ import lombok.Data;
 @Data
 public class CategoryRequest {
 
-    @NotNull(message = "Category is required")
-    @Size(max = 40, message = "Category cannot exceed 40 characters")
+    @NotNull(message = "Category name is required")
+    @Size(max = 40, message = "Category name cannot exceed 40 characters")
     private String name;
 
     @NotNull(message = "Description is required")
