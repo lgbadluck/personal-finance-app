@@ -160,10 +160,11 @@
                     <div class="card-body text-left">
                         <span class="hash" >name : </span><span class="card-text"
                                                                     th:text="${budget.name}"></span><br>
-                        <span class="hash" >categories : </span>
-                                                                <span th:each="category, iterStat : ${budget.categories}">
-                                                                    <span th:text="${category.name}"></span>
-                                                                    <span th:if="${iterStat.index < budget.categories.size() - 1}">, </span>
+                        <span class="hash" >categories : </span><span th:each="category, iterStat : ${budget.categories}">
+                                                                    <span th:if="${category.categoryOwner.id == user.id}">
+                                                                        <span th:text="${category.name}"></span>
+                                                                        <span th:if="${iterStat.index < budget.categories.size() - 1 && budget.categories[iterStat.index + 1].categoryOwner.id == user.id}">, </span>
+                                                                    </span>
                                                                 </span><br>
                         <span class="hash">limit : </span><span class="card-text" th:text="${budget.maxToSpend}"></span> EUR<br>
                         <span class="hash">spent : </span><span class="card-text" th:text="${budget.spent}"></span> EUR<br>
