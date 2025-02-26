@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
     <meta name="description" content=""/>
     <meta name="author" content=""/>
-    <title>Add Expense</title>
+    <title>Update Expense</title>
     <!-- Favicon-->
     <link rel="icon" type="image/x-icon" th:href="@{/assets/favicon.ico}"/>
     <!-- Font Awesome icons (free version)-->
@@ -29,7 +29,7 @@
 <header class="masthead bg-primary text-white">
     <div class="container d-flex align-items-center flex-column">
         <!-- Masthead Heading-->
-        <h3 class="masthead-heading text-uppercase mb-0" style="margin-top: -55px;">Add Expense</h3>
+        <h3 class="masthead-heading text-uppercase mb-0" style="margin-top: -55px;">Update Expense</h3>
         <!-- Icon Divider-->
         <div class="divider-custom divider-light">
             <div class="divider-custom-line"></div>
@@ -39,31 +39,29 @@
     </div>
     <!-- Masthead form-->
     <div class="d-flex flex-column justify-content-start text-left gap-10">
-        <div class="container d-flex  flex-column" style="width: 75vw">
+        <div class="row">
             <div class="col-md-6 offset-md-3">
-                <form th:action="@{/expenses}" th:method="POST" th:object="${expenseRequest}">
+                <form th:action="@{/expenses/submitUpdate(expenseId=${expenseId})}" th:object="${expenseRequest}" th:method="PUT">
                     <div class="form-group">
                         <!-- Dropdown List for Expense Categories -->
-                        <label for="expenseCategory" class="text-left"><h6>Expense Category :</h6></label>
+                        <label for="expenseCategory"><h6>Expense Category :</h6></label>
                         <select id="expenseCategory" name="expenseCategory" style="width: 32%; margin-left: 20px;" th:field="*{categoryName}" required>
                             <option th:each="category : ${user.categories}" th:value="${category.name}" th:text="${category.name}"> </option>
                         </select>
-                        <a th:href="@{/category/add}" class="btn btn-info border-dark-subtle">Add New</a>
-                    </div>
-
-                    <br>
-                    <div class="form-group">
-                        <label for="amount" class="text-left"><h6>Amount</h6></label>
-                        <input type="number" step="0.01" class="form-control" id="amount" th:field="*{amount}" required>
                     </div>
                     <br>
                     <div class="form-group">
-                        <label for="dateTime" class="text-left"><h6>Date & Time</h6></label>
+                        <label for="amount"><h6>Amount</h6></label>
+                        <input type="number" class="form-control" id="amount" th:field="*{amount}" required>
+                    </div>
+                    <br>
+                    <div class="form-group">
+                        <label for="dateTime"><h6>Date & Time</h6></label>
                         <input type="datetime-local" class="form-control" id="dateTime" th:field="*{dateTimeOfExpense}" required>
                     </div>
                     <br>
                     <div class="form-group">
-                        <label for="description" class="text-left"><h6>Description</h6></label>
+                        <label for="description"><h6>Description</h6></label>
                         <textarea class="form-control" id="description" th:field="*{description}" rows="3"></textarea>
                     </div>
                     <br>
@@ -76,17 +74,13 @@
 <!-- Copyright Section-->
 <div class="copyright py-4 text-center text-white">
 </div>
-
-
 <!-- Bootstrap core JS-->
-<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"
-        integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"
-        integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
         crossorigin="anonymous"></script>
-
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous"></script>
 <!-- Core theme JS-->
 <script th:src="@{/js/scripts.js}"></script>
 </body>

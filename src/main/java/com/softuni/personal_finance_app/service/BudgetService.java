@@ -57,7 +57,7 @@ public class BudgetService {
 
             budget.setSpent(spentOnBudget);
 
-            if(endDate.isAfter(LocalDateTime.now())) {
+            if(endDate.isBefore(LocalDateTime.now())) {
                 budget.setStatus(BudgetStatus.COMPLETED);
             }
 
@@ -66,9 +66,6 @@ public class BudgetService {
     }
 
     public void saveBudget(BudgetRequest budgetRequest, User user) {
-
-            List<User> users = new ArrayList<>();
-            users.add(user);
 
             Budget budget = Budget.builder()
                     .name(budgetRequest.getName())
@@ -79,8 +76,10 @@ public class BudgetService {
                     .categories(budgetRequest.getSelectedCategories())
                     .isRenewed(true)
                     .status(BudgetStatus.ACTIVE)
-                    .users(users)
+                    .users(new ArrayList<>())
                     .build();
+
+            budget.addUser(user);
 
             budgetRepository.save(budget);
     }

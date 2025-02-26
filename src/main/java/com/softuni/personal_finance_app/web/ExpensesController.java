@@ -5,18 +5,20 @@ import com.softuni.personal_finance_app.enitity.Expense;
 import com.softuni.personal_finance_app.security.AuthenticatedUserDetails;
 import com.softuni.personal_finance_app.service.ExpenseService;
 import com.softuni.personal_finance_app.service.UserService;
+import com.softuni.personal_finance_app.web.dto.ClientEditRequest;
 import com.softuni.personal_finance_app.web.dto.ExpenseRequest;
+import com.softuni.personal_finance_app.web.mapper.DtoMapper;
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
+import java.util.UUID;
 
 @Controller
 @RequestMapping("/expenses")
@@ -45,7 +47,7 @@ public class ExpensesController {
     }
 
     @PostMapping("")
-    public ModelAndView processExpenseRequest(@Valid ExpenseRequest expenseRequest,
+    public ModelAndView processNewExpenseRequest(@Valid ExpenseRequest expenseRequest,
                                                    BindingResult bindingResult,
                                                    @AuthenticationPrincipal AuthenticatedUserDetails authenticatedUserDetails) {
 
@@ -75,4 +77,53 @@ public class ExpensesController {
 
         return modelAndView;
     }
+
+    @GetMapping("/showUpdate")
+    public ModelAndView getExpenseUpdatePage(@RequestParam("expenseId") UUID expenseId,
+                                             @AuthenticationPrincipal AuthenticatedUserDetails authenticatedUserDetails){
+
+        User user = userService.getById(authenticatedUserDetails.getUserId());
+
+        Expense expense = expenseService.findExpenseById(expenseId);
+
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("update-expense");
+        modelAndView.addObject("user", user);
+        modelAndView.addObject("expenseRequest", DtoMapper.mapExpenseToExpenseRequest(expense));
+        modelAndView.addObject("expenseId", expenseId);
+
+        return modelAndView;
+    }
+
+    @PutMapping("/submitUpdate")
+    public ModelAndView processExpenseUpdate(@RequestParam("expenseId") UUID expenseId,
+                                       @Valid ExpenseRequest expenseRequest, BindingResult bindingResult,
+                                       @AuthenticationPrincipal AuthenticatedUserDetails authenticatedUserDetails){
+
+        User user = userService.getById(authenticatedUserDetails.getUserId());
+
+        if (bindingResult.hasErrors()) {
+            ModelAndView modelAndView = new ModelAndView();
+            modelAndView.setViewName("update-expense");
+            modelAndView.addObject("user", user);
+            modelAndView.addObject("expenseRequest", expenseRequest);
+            modelAndView.addObject("expenseId", expenseId);
+            return modelAndView;
+        }
+
+        expenseService.updateExpense(expenseId, expenseRequest, user);
+
+        return new ModelAndView("redirect:/expenses");
+    }
+
+    @GetMapping("/delete")
+    public String delete(@RequestParam("expenseId") UUID expenseId,
+                         @AuthenticationPrincipal AuthenticatedUserDetails authenticatedUserDetails){
+
+        User user = userService.getById(authenticatedUserDetails.getUserId());
+
+        expenseService.deleteExpenseByIdAndOwner(expenseId, user);
+        return "redirect:/expenses";
+    }
+
 }

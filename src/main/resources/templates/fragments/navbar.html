@@ -22,10 +22,13 @@
                     <a class="nav-link py-3 px-0 px-lg-3 rounded" th:href="@{/login}">Sign in</a></li>
                 <li th:if="${showUp == 'yes'}" class="nav-item mx-0 mx-lg-1" style="cursor: pointer;">
                     <a class="nav-link py-3 px-0 px-lg-3 rounded" th:href="@{/register}">Sign up</a></li>
-                <li th:if="${showList == 'yes'}" class="nav-item mx-0 mx-lg-1" style="cursor: pointer;">
-                    <a class="nav-link py-3 px-0 px-lg-3 rounded" th:href="@{/expenses}">Expenses</a></li>
+
                 <li th:if="${showList == 'yes'}" class="nav-item mx-0 mx-lg-1" style="cursor: pointer;">
                     <a class="nav-link py-3 px-0 px-lg-3 rounded" th:href="@{/budgets}">Budgets</a></li>
+                <li th:if="${showAdd == 'yes'}" class="nav-item mx-0 mx-lg-1" style="cursor: pointer;">
+                    <a class="nav-link py-3 px-0 px-lg-3 rounded" th:href="@{/budgets/add}">Add Budget</a></li>
+                <li th:if="${showList == 'yes'}" class="nav-item mx-0 mx-lg-1" style="cursor: pointer;">
+                    <a class="nav-link py-3 px-0 px-lg-3 rounded" th:href="@{/expenses}">Expenses</a></li>
                 <li th:if="${showAdd == 'yes'}" class="nav-item mx-0 mx-lg-1" style="cursor: pointer;">
                     <a class="nav-link py-3 px-0 px-lg-3 rounded" th:href="@{/expenses/add}">Add Expense</a></li>
                 <li th:if="${showProfile == 'yes'}" class="nav-item mx-0 mx-lg-1" style="cursor: pointer;">

@@ -10,6 +10,9 @@ import com.softuni.personal_finance_app.web.dto.ExpenseRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+import java.util.UUID;
+
 @Service
 public class ExpenseService {
 
@@ -31,8 +34,50 @@ public class ExpenseService {
             expenseRepository.save(Expense.builder()
                             .category(category)
                             .amount(expenseRequest.getAmount())
-                            .datetimeOfExpense(expenseRequest.getDatetimeOfExpense())
+                            .datetimeOfExpense(expenseRequest.getDateTimeOfExpense())
                             .description(expenseRequest.getDescription())
                     .build());
+    }
+
+    public Expense findExpenseById(UUID expenseId) {
+
+        return expenseRepository.findById(expenseId).orElseThrow(() -> new DomainException("Can't find Expense id [%s]".formatted(expenseId.toString())));
+    }
+
+    public void updateExpense(UUID expenseId, ExpenseRequest expenseRequest, User user) {
+
+        Expense expense = expenseRepository.findById(expenseId).orElseThrow(() -> new DomainException("Can't find Expense id [%s]".formatted(expenseId.toString())));
+
+        Category category = categoryRepository.findByNameAndCategoryOwner(expenseRequest.getCategoryName(), user)
+                .orElseThrow(() -> new DomainException("No such category name [%s] for user id [%s]".formatted(expenseRequest.getCategoryName(), user.getId().toString())));
+
+
+        expense.setAmount(expenseRequest.getAmount());
+        expense.setDatetimeOfExpense(expenseRequest.getDateTimeOfExpense());
+        expense.setDescription(expenseRequest.getDescription());
+        expense.setCategory(category);
+
+        expenseRepository.save(expense);
+    }
+
+    public void deleteExpenseByIdAndOwner(UUID expenseId, User user) {
+
+        Optional<Expense> optionalExpense = expenseRepository.findById(expenseId);
+
+        if(optionalExpense.isEmpty()) {
+            throw new DomainException("Expense with id [%s]".formatted(expenseId.toString()));
+        }
+
+        Expense expense = optionalExpense.get();
+
+        if(expense.getCategory().getCategoryOwner().getId() != user.getId()) {
+            throw new DomainException("User with id [%s] is not owner of Expense with id [%s] and owner id [%s]"
+                    .formatted(
+                            user.getId().toString(),
+                            expense.getId().toString(),
+                            expense.getCategory().getCategoryOwner().getId()));
+        }
+
+        expenseRepository.deleteById(expenseId);
     }
 }

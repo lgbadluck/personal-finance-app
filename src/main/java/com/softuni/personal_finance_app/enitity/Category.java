@@ -33,7 +33,7 @@ public class Category {
     private User categoryOwner;
 
     @ManyToMany(mappedBy = "categories")
-    @OrderBy("createdOn ASC")
+    @OrderBy("createdOn DESC")
     private List<Budget> budgets;
 
     @OneToMany(mappedBy = "category")

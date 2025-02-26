@@ -7,6 +7,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -48,10 +49,18 @@ public class User {
     @OrderBy("createdOn ASC")
     private List<Category> categories;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(
             name = "user_budget",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "budget_id"))
-    private List<Budget> budgets;
+    @OrderBy("createdOn DESC")
+    private List<Budget> budgets = new ArrayList<>();
+
+    // Other fields and methods
+    public void addBudget(Budget budget) {
+
+        budgets.add(budget);
+        budget.getUsers().add(this);
+    }
 }

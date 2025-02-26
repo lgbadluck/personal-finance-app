@@ -7,6 +7,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -52,12 +53,19 @@ public class Budget {
     @OrderBy("createdOn ASC")
     private List<Category> categories;
 
-    @ManyToMany(mappedBy = "budgets")
-    private List<User> users;
+    @ManyToMany(mappedBy = "budgets", cascade = CascadeType.ALL)
+    private List<User> users = new ArrayList<>();
 
     @CreationTimestamp
     private LocalDateTime createdOn;
 
     @UpdateTimestamp
     private LocalDateTime updatedOn;
+
+    // Other fields and methods
+    public void addUser(User user) {
+
+        users.add(user);
+        user.getBudgets().add(this);
+    }
 }

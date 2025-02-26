@@ -71,8 +71,6 @@
                         <i class="fa-solid fa-filter"></i>
                         Filters
                     </button>
-                    <div class="col-md-6 offset-md-3">
-                        <a th:href="@{/budgets/add}" class="btn btn-info border-dark-subtle">Add Budget</a></div>
 
                     <!-- // TO DO: ADD FILTER
                     <div id="filterForm" style="display: none;margin-left: 14%;width: 127%;">
@@ -166,15 +164,20 @@
                                                                         <span th:if="${iterStat.index < budget.categories.size() - 1 && budget.categories[iterStat.index + 1].categoryOwner.id == user.id}">, </span>
                                                                     </span>
                                                                 </span><br>
-                        <span class="hash">limit : </span><span class="card-text" th:text="${budget.maxToSpend}"></span> EUR<br>
-                        <span class="hash">spent : </span><span class="card-text" th:text="${budget.spent}"></span> EUR<br>
+                        <span class="hash">limit : </span><span class="card-text status completed" th:text="${budget.maxToSpend}"></span> EUR<br>
+                        <span class="hash">spent : </span><span class="card-text" th:classappend="${budget.spent >= budget.maxToSpend} ? 'status terminated' : 'status active'" th:text="${budget.spent}"></span> EUR<br>
 
                         <span class="hash">start date : </span><span class="card-text"
                                                                       th:text="${#temporals.format(budget.createdOn, 'dd MMM YYYY')}"></span><br>
                         <span class="hash">type : </span><span class="card-text"
                                                                       th:text="${budget.type.name()}"></span><br>
                         <span class="hash">status : </span><span class="card-text"
-                                                               th:text="${budget.status.name()}"></span><br>
+                                                                 th:classappend="'status '
+                                                                                         + (${budget.status.name()} == 'ACTIVE' ? 'active' : '')
+                                                                                         + (${budget.status.name()} == 'COMPLETED' ? 'completed' : '')
+                                                                                         + (${budget.status.name()} == 'TERMINATED' ? 'terminated' : '')"
+                                                                 th:text="${budget.status.name()}"></span><br>
+
                         <span class="hash">description : </span><span class="card-text"
                                                                       th:text="${budget.description}"></span><br>
                         <div class="text-center" style="margin-top:28px;">
