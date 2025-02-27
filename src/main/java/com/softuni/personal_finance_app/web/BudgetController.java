@@ -45,6 +45,7 @@ public class BudgetController {
         modelAndView.setViewName("add-budget");
         modelAndView.addObject("budgetRequest", new BudgetRequest());
         modelAndView.addObject("user", user);
+        modelAndView.addObject("activePage", "budgets-add");
 
         return modelAndView;
     }
@@ -76,6 +77,7 @@ public class BudgetController {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("budgets-page");
         modelAndView.addObject("user", user);
+        modelAndView.addObject("activePage", "budgets");
 
         return modelAndView;
     }

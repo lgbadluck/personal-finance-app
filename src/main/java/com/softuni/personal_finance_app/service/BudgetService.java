@@ -32,7 +32,8 @@ public class BudgetService {
     }
 
 
-    @Scheduled(fixedRate = 3600000) // 60 minutes in milliseconds
+    //@Scheduled(fixedRate = 3600000) // 60 minutes in milliseconds
+    @Scheduled(fixedRate = 60000) // 1 minutes in milliseconds
     @Transactional
     public void checkCompletedBudgetStatus() {
         List<Budget> activeBudgets = budgetRepository.findByStatus(BudgetStatus.ACTIVE);
@@ -50,6 +51,7 @@ public class BudgetService {
                 }
             }
         }
+        System.out.println("%s -==- SCHEDULED-JOB: Checked for Completed Budgets!".formatted(LocalDateTime.now()));
     }
 
     private static void renewBudget(Budget budget) {
@@ -84,9 +86,11 @@ public class BudgetService {
 
             budget.setSpent(spentOnBudget);
 
+            /* No Longer Needed has Scheduled Job
             if(endDate.isBefore(LocalDateTime.now())) {
                 budget.setStatus(BudgetStatus.COMPLETED);
             }
+            */
 
             budgetRepository.save(budget);
         }

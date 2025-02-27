@@ -52,6 +52,7 @@ public class UserController {
         modelAndView.setViewName("settings-page");
         modelAndView.addObject("user", user);
         modelAndView.addObject("clientEditRequest", DtoMapper.mapUserToClientEditRequest(user));
+        modelAndView.addObject("activePage", "settings");
 
         return modelAndView;
     }

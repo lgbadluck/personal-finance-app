@@ -43,6 +43,9 @@ public class ExpensesController {
         modelAndView.setViewName("add-expense");
         modelAndView.addObject("user", user);
         modelAndView.addObject("expenseRequest", new ExpenseRequest());
+        modelAndView.addObject("activePage", "expenses-add");
+
+
         return modelAndView;
     }
 
@@ -74,6 +77,7 @@ public class ExpensesController {
         modelAndView.setViewName("expenses-page");
         modelAndView.addObject("user", user);
         modelAndView.addObject("expenseList", expenseList);
+        modelAndView.addObject("activePage", "expenses");
 
         return modelAndView;
     }

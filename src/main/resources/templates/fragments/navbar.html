@@ -6,8 +6,8 @@
 <nav class="navbar navbar-expand-lg bg-secondary text-uppercase fixed-top" id="mainNav"
      th:fragment="navbar(showAbout, showIn, showUp, showList, showAdd, showProfile)">
     <div class="container">
-        <a class="navbar-brand" th:if="${user}" th:href="@{/home}">Personal Finance Tracker</a>
-        <a class="navbar-brand" th:unless="${user}" th:href="@{/}">Personal Finance Tracker</a>
+        <a class="navbar-brand" th:if="${user}" th:href="@{/home}">Personal Finance</a>
+        <a class="navbar-brand" th:unless="${user}" th:href="@{/}">Personal Finance</a>
         <button class="navbar-toggler text-uppercase font-weight-bold bg-primary text-white rounded" type="button"
                 data-bs-toggle="collapse" data-bs-target="#navbarResponsive" aria-controls="navbarResponsive"
                 aria-expanded="false" aria-label="Toggle navigation">
@@ -17,24 +17,38 @@
         <div class="collapse navbar-collapse" id="navbarResponsive">
             <ul class="navbar-nav ms-auto">
                 <li th:if="${showAbout == 'yes'}" class="nav-item mx-0 mx-lg-1">
-                    <a class="nav-link py-3 px-0 px-lg-3 rounded" href="#about">About</a></li>
+                    <a class="nav-link py-3 px-0 px-lg-3 rounded"
+                       th:classappend="${activePage == 'about' ? ' active' : ''}"
+                       href="#about">About</a></li>
                 <li th:if="${showIn == 'yes'}" class="nav-item mx-0 mx-lg-1" style="cursor: pointer;">
                     <a class="nav-link py-3 px-0 px-lg-3 rounded" th:href="@{/login}">Sign in</a></li>
                 <li th:if="${showUp == 'yes'}" class="nav-item mx-0 mx-lg-1" style="cursor: pointer;">
                     <a class="nav-link py-3 px-0 px-lg-3 rounded" th:href="@{/register}">Sign up</a></li>
 
                 <li th:if="${showList == 'yes'}" class="nav-item mx-0 mx-lg-1" style="cursor: pointer;">
-                    <a class="nav-link py-3 px-0 px-lg-3 rounded" th:href="@{/budgets}">Budgets</a></li>
+                    <a class="nav-link py-3 px-0 px-lg-3 rounded"
+                       th:classappend="${activePage == 'budgets' ? ' active' : ''}"
+                       th:href="@{/budgets}">Budgets</a></li>
                 <li th:if="${showAdd == 'yes'}" class="nav-item mx-0 mx-lg-1" style="cursor: pointer;">
-                    <a class="nav-link py-3 px-0 px-lg-3 rounded" th:href="@{/budgets/add}">Add Budget</a></li>
+                    <a class="nav-link py-3 px-0 px-lg-3 rounded"
+                       th:classappend="${activePage == 'budgets-add' ? ' active' : ''}"
+                       th:href="@{/budgets/add}">Add Budget</a></li>
                 <li th:if="${showList == 'yes'}" class="nav-item mx-0 mx-lg-1" style="cursor: pointer;">
-                    <a class="nav-link py-3 px-0 px-lg-3 rounded" th:href="@{/expenses}">Expenses</a></li>
+                    <a class="nav-link py-3 px-0 px-lg-3 rounded"
+                       th:classappend="${activePage == 'expenses' ? ' active' : ''}"
+                       th:href="@{/expenses}">Expenses</a></li>
                 <li th:if="${showAdd == 'yes'}" class="nav-item mx-0 mx-lg-1" style="cursor: pointer;">
-                    <a class="nav-link py-3 px-0 px-lg-3 rounded" th:href="@{/expenses/add}">Add Expense</a></li>
+                    <a class="nav-link py-3 px-0 px-lg-3 rounded"
+                       th:classappend="${activePage == 'expenses-add' ? ' active' : ''}"
+                       th:href="@{/expenses/add}">Add Expense</a></li>
                 <li th:if="${showProfile == 'yes'}" class="nav-item mx-0 mx-lg-1" style="cursor: pointer;">
-                    <a class="nav-link py-3 px-0 px-lg-3 rounded" th:href="@{/settings}">
+                    <a class="nav-link py-3 px-0 px-lg-3 rounded"
+                       th:classappend="${activePage == 'settings' ? ' active' : ''}"
+                       th:href="@{/settings}">
                         <i class="fa-solid fa-bars fa-1x"
                            style="margin-right: 7px; color:white;"></i>Edit</a></li>
+
+
                 <li th:if="${showProfile == 'yes'}" class="nav-item mx-0 mx-lg-1" style="cursor: pointer;">
                     <a class="nav-link py-3 px-0 px-lg-3 rounded" th:href="@{/logout}">
                         <i class="fa-solid fa-arrow-right-from-bracket fa-1x"
