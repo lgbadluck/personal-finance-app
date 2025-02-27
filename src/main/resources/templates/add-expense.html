@@ -49,22 +49,34 @@
                             <option th:each="category : ${user.categories}" th:value="${category.name}" th:text="${category.name}"> </option>
                         </select>
                         <a th:href="@{/category/add}" class="btn btn-info border-dark-subtle">Add New</a>
+                        <p th:if="${#fields.hasErrors('categoryName')}"
+                        th:errors="*{categoryName}"
+                           class="error"></p>
                     </div>
 
                     <br>
                     <div class="form-group">
                         <label for="amount" class="text-left"><h6>Amount</h6></label>
                         <input type="number" step="0.01" class="form-control" id="amount" th:field="*{amount}" required>
+                        <p th:if="${#fields.hasErrors('amount')}"
+                           th:errors="*{amount}"
+                           class="error"></p>
                     </div>
                     <br>
                     <div class="form-group">
                         <label for="dateTime" class="text-left"><h6>Date & Time</h6></label>
                         <input type="datetime-local" class="form-control" id="dateTime" th:field="*{dateTimeOfExpense}" required>
+                        <p th:if="${#fields.hasErrors('dateTimeOfExpense')}"
+                           th:errors="*{dateTimeOfExpense}"
+                           class="error"></p>
                     </div>
                     <br>
                     <div class="form-group">
                         <label for="description" class="text-left"><h6>Description</h6></label>
                         <textarea class="form-control" id="description" th:field="*{description}" rows="3"></textarea>
+                        <p th:if="${#fields.hasErrors('description')}"
+                           th:errors="*{description}"
+                           class="error"></p>
                     </div>
                     <br>
                     <input type="submit" class="btn btn-success" value="Submit" style="width: 30%;"/>

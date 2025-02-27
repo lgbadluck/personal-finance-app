@@ -156,13 +156,11 @@
             <div class="col-4 py-2" th:each="exp : ${expenseList}">
                 <div class="card h-100 border-success">
                     <div class="card-body text-left">
-                        <span class="hash" >category : </span><span class="card-text"
+                        <span class="hash" >category : </span><span class="card-text category default"
                                                                    th:text="${exp.category.name}"></span><br>
-                        <span class="hash">amount : </span><span class="card-text" th:text="${exp.amount}"></span> EUR<br>
+                        <span class="hash">amount : </span><span class="card-text" th:text="${exp.amount + ' EUR'}"></span><br>
                         <span class="hash">date : </span><span class="card-text"
-                              th:text="${#temporals.format(exp.datetimeOfExpense, 'dd MMM YYYY')}"></span><br>
-                        <span class="hash">time : </span><span class="card-text"
-                              th:text="${#temporals.format(exp.datetimeOfExpense, 'HH:mm') + 'h'}"></span><br>
+                              th:text="${#temporals.format(exp.datetimeOfExpense, 'dd MMM YYYY HH:mm') + 'h'}"></span><br>
                         <span class="hash">description : </span><span class="card-text"
                                                                       th:text="${exp.description}"></span><br>
                         <div class="text-center" style="margin-top:28px;">

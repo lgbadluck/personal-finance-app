@@ -27,8 +27,6 @@ public class UserService implements UserDetailsService {
 
     private final UserRepository userRepository;
     private final ClientRepository clientRepository;
-    private final ExpenseRepository expenseRepository;
-
     private final CategoryRepository categoryRepository;
     private final PasswordEncoder passwordEncoder;
 
@@ -37,13 +35,11 @@ public class UserService implements UserDetailsService {
     @Autowired
     public UserService(UserRepository userRepository,
                        ClientRepository clientRepository,
-                       ExpenseRepository expenseRepository,
                        CategoryRepository categoryRepository,
                        PasswordEncoder passwordEncoder,
                        List<String> getDefaultCategories) {
         this.userRepository = userRepository;
         this.clientRepository = clientRepository;
-        this.expenseRepository = expenseRepository;
         this.categoryRepository = categoryRepository;
         this.passwordEncoder = passwordEncoder;
         this.getDefaultCategories = getDefaultCategories;
@@ -138,15 +134,6 @@ public class UserService implements UserDetailsService {
 
         User user = getById(userId);
 
-        // НАЧИН 1:
-//        if (user.isActive()){
-//            user.setActive(false);
-//        } else {
-//            user.setActive(true);
-//        }
-
-        // false -> true
-        // true -> false
         user.setActive(!user.isActive());
         userRepository.save(user);
     }

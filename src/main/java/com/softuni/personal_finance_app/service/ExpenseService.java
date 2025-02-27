@@ -65,17 +65,18 @@ public class ExpenseService {
         Optional<Expense> optionalExpense = expenseRepository.findById(expenseId);
 
         if(optionalExpense.isEmpty()) {
-            throw new DomainException("Expense with id [%s]".formatted(expenseId.toString()));
+            throw new DomainException("Expense id [%s]".formatted(expenseId.toString()));
         }
 
         Expense expense = optionalExpense.get();
 
         if(expense.getCategory().getCategoryOwner().getId() != user.getId()) {
-            throw new DomainException("User with id [%s] is not owner of Expense with id [%s] and owner id [%s]"
+            throw new DomainException("User id [%s] is not owner of Expense id [%s] and owner id [%s]"
                     .formatted(
                             user.getId().toString(),
                             expense.getId().toString(),
-                            expense.getCategory().getCategoryOwner().getId()));
+                            expense.getCategory().getCategoryOwner().getId())
+            );
         }
 
         expenseRepository.deleteById(expenseId);

@@ -158,33 +158,46 @@
                     <div class="card-body text-left">
                         <span class="hash" >name : </span><span class="card-text"
                                                                     th:text="${budget.name}"></span><br>
-                        <span class="hash" >categories : </span><span th:each="category, iterStat : ${budget.categories}">
-                                                                    <span th:if="${category.categoryOwner.id == user.id}">
-                                                                        <span th:text="${category.name}"></span>
-                                                                        <span th:if="${iterStat.index < budget.categories.size() - 1 && budget.categories[iterStat.index + 1].categoryOwner.id == user.id}">, </span>
-                                                                    </span>
-                                                                </span><br>
-                        <span class="hash">limit : </span><span class="card-text status completed" th:text="${budget.maxToSpend}"></span> EUR<br>
-                        <span class="hash">spent : </span><span class="card-text" th:classappend="${budget.spent >= budget.maxToSpend} ? 'status terminated' : 'status active'" th:text="${budget.spent}"></span> EUR<br>
 
-                        <span class="hash">start date : </span><span class="card-text"
-                                                                      th:text="${#temporals.format(budget.createdOn, 'dd MMM YYYY')}"></span><br>
+
+                        <span class="hash">categories :</span>
+                        <span th:each="category, iterStat : ${budget.categories}">
+                                <span th:if="${category.categoryOwner.id == user.id}">
+                                    <span th:text="${category.name}" class="category default"></span>
+                                </span>
+                        </span><br>
+
+                        <span class="hash">limit : </span>
+                            <span class="card-text status completed" th:text="${budget.maxToSpend + ' EUR'}"></span><br>
+
+                        <span class="hash">spent : </span>
+                            <span class="card-text" th:classappend="${budget.spent >= budget.maxToSpend} ? 'status terminated' : 'status active'" th:text="${budget.spent + ' EUR'}"></span><br>
+
+                        <span class="hash">start date : </span>
+                            <span class="card-text" th:text="${#temporals.format(budget.createdOn, 'dd MMM YYYY HH:mm') + 'h'}">h</span><br>
+
+                        <span class="hash">end date : </span>
+                            <span class="card-text" th:if="${budget.type.name() == 'WEEK'}"  th:text="${#temporals.format(budget.createdOn.plusWeeks(1),  'dd MMM YYYY HH:mm') + 'h'}"></span>
+                            <span class="card-text" th:if="${budget.type.name() == 'MONTH'}" th:text="${#temporals.format(budget.createdOn.plusMonths(1), 'dd MMM YYYY HH:mm') + 'h'}"></span>
+                            <span class="card-text" th:if="${budget.type.name() == 'YEAR'}"  th:text="${#temporals.format(budget.createdOn.plusYears(1),  'dd MMM YYYY HH:mm') + 'h'}"></span><br>
                         <span class="hash">type : </span><span class="card-text"
                                                                       th:text="${budget.type.name()}"></span><br>
-                        <span class="hash">status : </span><span class="card-text"
-                                                                 th:classappend="'status '
-                                                                                         + (${budget.status.name()} == 'ACTIVE' ? 'active' : '')
-                                                                                         + (${budget.status.name()} == 'COMPLETED' ? 'completed' : '')
-                                                                                         + (${budget.status.name()} == 'TERMINATED' ? 'terminated' : '')"
-                                                                 th:text="${budget.status.name()}"></span><br>
 
-                        <span class="hash">description : </span><span class="card-text"
-                                                                      th:text="${budget.description}"></span><br>
+                        <span class="hash">status : </span>
+                            <span class="card-text" th:classappend="'status '
+                                                                + (${budget.status.name()} == 'ACTIVE' ? 'active' : '')
+                                                                + (${budget.status.name()} == 'COMPLETED' ? 'completed' : '')
+                                                                + (${budget.status.name()} == 'TERMINATED' ? 'terminated' : '')"
+                                                                th:text="${budget.status.name()}"></span><br>
+
+                        <span class="hash">description : </span>
+                            <span class="card-text" th:text="${budget.description}"></span><br>
+
                         <div class="text-center" style="margin-top:28px;">
-                            <a th:href="@{/show(budgetId=${budget.id})}" class="btn btn-info border-light"
-                               style="background: #1abc9c; color: white;">Update</a>
-                            <a th:href="@{/delete(budgetId=${budget.id})}" class="btn btn-danger"
-                               onclick="if(!(confirm('Are you sure you want to delete this expense?'))) return false">Delete</a>
+                            <a th:if="${budget.status.name()} == 'ACTIVE'" th:href="@{/budgets/showEdit(budgetId=${budget.id})}" class="btn btn-info border-light"
+                               style="background: #1abc9c; color: white;">Edit</a>
+                            <a th:unless="${budget.status.name()} == 'TERMINATED'" th:href="@{/budgets/delete(budgetId=${budget.id})}" class="btn btn-danger"
+                               onclick="if(!(confirm('The Budget will not be permanently deleted, just Terminated!'))) return false">Delete</a>
                         </div>
                     </div>
                 </div>

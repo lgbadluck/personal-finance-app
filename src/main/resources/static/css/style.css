@@ -272,6 +272,22 @@ body {
 
 }
 
+.category {
+  display: inline-block;
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 10px;
+  font-weight: 500;
+  text-transform: capitalize;
+}
+
+.category.default {
+  background-color: #82a9af;
+  color: rgba(17, 75, 213, 0.6);
+  border: 1px solid rgba(10, 22, 49, 0.6);
+  box-shadow: 0 4px 8px rgba(154, 164, 196, 0.6);
+}
+
 .profile-actions {
   margin-top: 20px;
 }
@@ -465,3 +481,4 @@ h2, .h2 {
   height: auto;
   padding-top: 10rem;
 }
+

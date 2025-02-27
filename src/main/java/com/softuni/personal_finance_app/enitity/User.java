@@ -54,7 +54,7 @@ public class User {
             name = "user_budget",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "budget_id"))
-    @OrderBy("createdOn DESC")
+    @OrderBy("status ASC, createdOn DESC")
     private List<Budget> budgets = new ArrayList<>();
 
     // Other fields and methods
