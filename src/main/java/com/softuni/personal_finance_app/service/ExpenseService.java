@@ -112,7 +112,7 @@ public class ExpenseService {
                 .filter(expense -> {
                     String compareTo = expensesFilterRequest.getCategoryName();
                     String expenseCategoryName = expense.getCategory().getName();
-                    return (expenseCategoryName.equals("all") || expenseCategoryName.equals(compareTo));
+                    return (compareTo.equals("all") || expenseCategoryName.equals(compareTo));
                 })
                 .toList();
 
