@@ -49,11 +49,4 @@ public class WebMvcConfiguration implements WebMvcConfigurer {
 
         return http.build();
     }
-
-    @Override
-    public void addFormatters(@NonNull FormatterRegistry registry) {
-        DateTimeFormatterRegistrar registrar = new DateTimeFormatterRegistrar();
-        registrar.setDateTimeFormatter(DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm"));
-        registrar.registerFormatters(registry);
-    }
 }

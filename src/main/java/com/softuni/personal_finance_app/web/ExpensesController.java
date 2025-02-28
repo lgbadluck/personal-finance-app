@@ -5,10 +5,9 @@ import com.softuni.personal_finance_app.enitity.Expense;
 import com.softuni.personal_finance_app.security.AuthenticatedUserDetails;
 import com.softuni.personal_finance_app.service.ExpenseService;
 import com.softuni.personal_finance_app.service.UserService;
-import com.softuni.personal_finance_app.web.dto.ClientEditRequest;
 import com.softuni.personal_finance_app.web.dto.ExpenseRequest;
+import com.softuni.personal_finance_app.web.dto.ExpensesFilterRequest;
 import com.softuni.personal_finance_app.web.mapper.DtoMapper;
-import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -76,6 +75,7 @@ public class ExpensesController {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("expenses-page");
         modelAndView.addObject("user", user);
+        modelAndView.addObject("expensesFilterRequest", new ExpensesFilterRequest());
         modelAndView.addObject("expenseList", expenseList);
         modelAndView.addObject("activePage", "expenses");
 

@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
     <meta name="description" content=""/>
     <meta name="author" content=""/>
-    <title>Expenses - Finance Tracker</title>
+    <title>Filtered Expenses - Finance Tracker</title>
     <!-- Favicon-->
     <link rel="icon" type="image/x-icon" th:href="@{/assets/favicon.ico}"/>
     <!-- Font Awesome icons (free version)-->
@@ -55,80 +55,12 @@
 <section class="page-section mb-0 portfolio" id="about">
     <div class="container">
         <!-- About Section Heading-->
-        <h4 class="page-section-heading text-center text-uppercase" style="margin-top: 30px;">Expenses</h4>
+        <h4 class="page-section-heading text-center text-uppercase" style="margin-top: 30px;">Filtered Expenses</h4>
         <!-- Icon Divider-->
         <div class="divider-custom divider-dark">
             <div class="divider-custom-line"></div>
             <div class="divider-custom-icon"><i class="fas fa-bitcoin-sign"></i></div>
             <div class="divider-custom-line"></div>
-        </div>
-
-        <!-- Filter form-->
-        <div class="d-flex flex-column justify-content-start text-left gap-10">
-            <div class="row">
-                <div class="col-md-6 offset-md-3">
-                    <button class="btn btn-secondary" id="toggleFormBtn" style="margin-left: 33%;margin-bottom: 28px;width: 35%;">
-                        <i class="fa-solid fa-filter"></i>
-                        Filters
-                    </button>
-
-
-                   <div id="filterForm" style="display: none; margin-left: 10%;width: 150%;">
-                        <form th:action="@{/filter/expenses}" th:object="${expensesFilterRequest}" th:method="POST">
-                            <div class="form-group">
-                                <label for="expenseCategory" class="text-left"><h6>Expense Category :</h6></label>
-                                <select id="expenseCategory" name="expenseCategory" class="form-control" style="width: 57%; display: inline;" th:field="*{categoryName}" required>
-                                    <option value="all">ALL</option>
-                                    <option th:each="category : ${user.categories}" th:value="${category.name}" th:text="${category.name}"> </option>
-                                </select>
-                                <p th:if="${#fields.hasErrors('categoryName')}"
-                                   th:errors="*{categoryName}"
-                                   class="error"></p>
-                            </div>
-                            <br>
-                            <div class="form-group row">
-                                <div class="col-md-3 MY"><h6>Amount Range:</h6></div>
-                                <div class="col-md-3">
-                                    <label for="from" style="margin-left: 8px;"><h6>Min</h6></label>
-                                    <input type="number" step="0.01" class="form-control" id="from" th:placeholder="0.00" th:field="*{minAmount}">
-                                    <p th:if="${#fields.hasErrors('minAmount')}"
-                                       th:errors="*{minAmount}"
-                                       class="error"></p>
-                                </div>
-                                <div class="col-md-3">
-                                    <label for="to" style="margin-left: 8px;"><h6>Max</h6></label>
-                                    <input type="number" step="0.01" class="form-control" id="to" th:field="*{maxAmount}">
-                                    <p th:if="${#fields.hasErrors('maxAmount')}"
-                                       th:errors="*{maxAmount}"
-                                       class="error"></p>
-                                </div>
-                            </div>
-                            <br>
-                            <div class="form-group row">
-                                <div class="col-md-3 MY" ><h6>Date Range:</h6></div>
-                                <div class="col-md-3">
-                                <label for="fromDate" class="text-left" style="margin-left: 8px;"><h6>From</h6></label>
-                                <input type="date" class="form-control" id="fromDate" th:field="*{fromDate}" required>
-                                <p th:if="${#fields.hasErrors('fromDate')}"
-                                   th:errors="*{fromDate}"
-                                   class="error"></p>
-                                </div>
-                                <div class="col-md-3">
-                                <label for="toDate" class="text-left" style="margin-left: 8px;"><h6>To</h6></label>
-                                <input type="date" class="form-control" id="toDate" th:field="*{toDate}" required>
-                                <p th:if="${#fields.hasErrors('toDate')}"
-                                   th:errors="*{toDate}"
-                                   class="error"></p>
-                                </div>
-                            </div>
-                            <br>
-                            <input type="submit" class="btn btn-success" value="Apply" style="width: 28%;margin-left: 15%;"/>
-                            <br><br>
-                        </form>
-                    </div>
-
-                </div>
-            </div>
         </div>
 
         <!-- About Section Content-->
