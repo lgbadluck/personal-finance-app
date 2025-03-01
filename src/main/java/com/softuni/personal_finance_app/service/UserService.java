@@ -48,7 +48,7 @@ public class UserService implements UserDetailsService {
         Optional<User> userOptional = userRepository.findByUsername(registerRequest.getUsername());
 
         if(userOptional.isPresent()) {
-            throw new RuntimeException("Username already exists: [%s]".formatted(registerRequest.getUsername()));
+            throw new DomainException("Username already exists: [%s]".formatted(registerRequest.getUsername()));
         }
 
         Client client  = Client.builder()

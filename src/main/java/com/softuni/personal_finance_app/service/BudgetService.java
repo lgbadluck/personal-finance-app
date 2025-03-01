@@ -4,7 +4,10 @@ import com.softuni.personal_finance_app.enitity.*;
 import com.softuni.personal_finance_app.exception.DomainException;
 import com.softuni.personal_finance_app.repository.BudgetRepository;
 import com.softuni.personal_finance_app.repository.CategoryRepository;
+import com.softuni.personal_finance_app.repository.InvitationRepository;
+import com.softuni.personal_finance_app.repository.UserRepository;
 import com.softuni.personal_finance_app.web.dto.BudgetRequest;
+import com.softuni.personal_finance_app.web.dto.ShareBudgetRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -12,23 +15,27 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class BudgetService {
 
     private final BudgetRepository budgetRepository;
     private final CategoryRepository categoryRepository;
+    private final UserRepository userRepository;
+    private final InvitationRepository invitationRepository;
 
     @Autowired
     public BudgetService(BudgetRepository budgetRepository,
-                         CategoryRepository categoryRepository) {
+                         CategoryRepository categoryRepository,
+                         UserRepository userRepository,
+                         InvitationRepository invitationRepository) {
         this.budgetRepository = budgetRepository;
 
         this.categoryRepository = categoryRepository;
+        this.userRepository = userRepository;
+        this.invitationRepository = invitationRepository;
     }
 
 
@@ -80,7 +87,9 @@ public class BudgetService {
 
             BigDecimal spentOnBudget = budget.getCategories().stream()
                     .flatMap(category -> category.getExpenses().stream())
-                    .filter(expense -> expense.getDatetimeOfExpense().isAfter(startDate) && expense.getDatetimeOfExpense().isBefore(endDate))
+                    .filter(expense ->
+                            expense.getDatetimeOfExpense().isAfter(startDate) &&
+                            expense.getDatetimeOfExpense().isBefore(endDate))
                     .map(Expense::getAmount)
                     .reduce(BigDecimal.ZERO, BigDecimal::add);
 
@@ -158,5 +167,97 @@ public class BudgetService {
 
         budget.setStatus(BudgetStatus.TERMINATED);
         budgetRepository.save(budget);
+    }
+
+    public void shareBudget(ShareBudgetRequest shareBudgetRequest, User senderUser, UUID budgetId) {
+        
+        Optional<Budget> optionalBudget = budgetRepository.findById(budgetId);
+
+        if(shareBudgetRequest.getUsername().equals(senderUser.getUsername())){
+            throw new DomainException("Can not send invitation to oneself: Username [%s]".formatted(shareBudgetRequest.getUsername()));
+        }
+
+        if(optionalBudget.isEmpty()) {
+            throw new DomainException("Not found - Budget id [%s]".formatted(budgetId.toString()));
+        }
+
+        Budget budget = optionalBudget.get();
+
+        Optional<User> userOptional = userRepository.findByUsername(shareBudgetRequest.getUsername());
+
+        if(userOptional.isEmpty()) {
+            throw new DomainException("Username does not exists: [%s]".formatted(shareBudgetRequest.getUsername()));
+        }
+
+        User receiverUser = userOptional.get();
+
+        Invitation invitation = Invitation.builder()
+                .name("Sharing a Budget [%s]".formatted(budget.getName()))
+                .budgetId(budgetId)
+                .senderId(senderUser.getId())
+                .senderUserName(senderUser.getUsername())
+                .receiverId(receiverUser.getId())
+                .receiverUserName(receiverUser.getUsername())
+                .status(InvitationStatus.SENT)
+                .build();
+
+        invitationRepository.save(invitation);
+    }
+
+    @Transactional
+    public void createSharedBudget(Invitation acceptedInvitation) {
+
+        Budget budget = budgetRepository.findById(acceptedInvitation.getBudgetId())
+                .orElseThrow(() -> new DomainException("Not found - Budget id [%s]".formatted(acceptedInvitation.getBudgetId())));
+
+        User user = userRepository.findById(acceptedInvitation.getReceiverId())
+                .orElseThrow(() -> new DomainException("User not found - User id [%s]".formatted(acceptedInvitation.getReceiverId())));
+
+        /*
+        List<Category> userMissingCategories = budget.getCategories().stream()
+                .filter(budgetCategory -> user.getCategories().stream()
+                        .noneMatch(userCategory -> userCategory.getName().equals(budgetCategory.getName())))
+                .toList();
+        */
+        List<Category> userMissingCategories = new ArrayList<>();
+        List<Category> userPresentCategories = new ArrayList<>();
+
+        for (Category budgetCategory : budget.getCategories()) {
+            boolean foundMatch = false;
+            for (Category userCategory : user.getCategories()) {
+                if(budgetCategory.getName().equals(userCategory.getName())) {
+                    userPresentCategories.add(userCategory);
+                    foundMatch = true;
+                    break;
+                }
+            }
+            if (!foundMatch) {
+                userMissingCategories.add(budgetCategory);
+            }
+        }
+
+        if(!userMissingCategories.isEmpty()) {
+            // Create Missing categories for User and add them
+            for (Category budgetCategory : userMissingCategories) {
+                Category category = Category.builder()
+                        .name(budgetCategory.getName())
+                        .description(budgetCategory.getDescription())
+                        .categoryOwner(user)
+                        .build();
+
+                categoryRepository.save(category);
+                userPresentCategories.add(category);
+            }
+        }
+
+        // Adding the new User's matching categories to the Shared Budget:
+        for (Category userPresentCategory : userPresentCategories) {
+            budget.addCategory(userPresentCategory);
+        }
+
+        budget.addUser(user);
+
+        budgetRepository.save(budget);
+        userRepository.save(user);
     }
 }

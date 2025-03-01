@@ -6,6 +6,7 @@ import com.softuni.personal_finance_app.security.AuthenticatedUserDetails;
 import com.softuni.personal_finance_app.service.BudgetService;
 import com.softuni.personal_finance_app.service.UserService;
 import com.softuni.personal_finance_app.web.dto.BudgetRequest;
+import com.softuni.personal_finance_app.web.dto.ShareBudgetRequest;
 import com.softuni.personal_finance_app.web.mapper.DtoMapper;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +32,44 @@ public class BudgetController {
                             BudgetService budgetService) {
         this.userService = userService;
         this.budgetService = budgetService;
+    }
+
+    @GetMapping("/share")
+    public ModelAndView getShareBudgetPage(@RequestParam("budgetId") UUID budgetId,
+                                           @AuthenticationPrincipal AuthenticatedUserDetails authenticatedUserDetails){
+
+        User user = userService.getById(authenticatedUserDetails.getUserId());
+
+        Budget budget = budgetService.findBudgetById(budgetId);
+
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("share-budget");
+        modelAndView.addObject("user", user);
+        modelAndView.addObject("shareBudgetRequest", new ShareBudgetRequest());
+        modelAndView.addObject("budgetId", budgetId);
+        modelAndView.addObject("budget", budget);
+
+        return modelAndView;
+    }
+
+    @PostMapping("/share")
+    public ModelAndView processShareBudgetRequest(@RequestParam("budgetId") UUID budgetId,
+                                                  @Valid ShareBudgetRequest shareBudgetRequest, BindingResult bindingResult,
+                                                  @AuthenticationPrincipal AuthenticatedUserDetails authenticatedUserDetails) {
+
+        if(bindingResult.hasErrors()) {
+            return new ModelAndView("share-budget");
+        }
+
+        User user = userService.getById(authenticatedUserDetails.getUserId());
+
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("redirect:/budgets");
+        modelAndView.addObject("user", user);
+
+        budgetService.shareBudget(shareBudgetRequest, user, budgetId);
+
+        return modelAndView;
     }
 
     @GetMapping("/add")

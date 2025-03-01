@@ -31,6 +31,10 @@
             margin-top: 34px;
             padding-left: 19px;
         }
+        .btn-disabled {
+            pointer-events: none;
+            opacity: 0.65;
+        }
     </style>
 </head>
 <body id="page-top">
@@ -38,7 +42,7 @@
 <div th:replace="~{fragments/navbar :: navbar('no', 'no', 'no', 'yes', 'yes', 'yes')}"></div>
 
 <!-- About Section-->
-<section class="page-section mb-0 portfolio" id="about">
+<section class="page-section mb-0 portfolio">
     <div class="container">
         <!-- About Section Heading-->
         <h4 class="page-section-heading text-center text-uppercase" style="margin-top: 30px;">Budgets</h4>
@@ -49,8 +53,7 @@
             <div class="divider-custom-line"></div>
         </div>
 
-        <!-- About Section Content-->
-        <!--        <div class="d-flex flex-row">-->
+
         <div class="row">
             <div class="col-4 py-2" th:each="budget : ${user.budgets}">
                 <div class="card h-100 border-success">
@@ -93,6 +96,12 @@
                             <span class="card-text" th:text="${budget.description}"></span><br>
 
                         <div class="text-center" style="margin-top:28px;">
+                            <a th:if="${budget.users.size() > 1}"
+                               class="btn btn-info border-light btn-disabled"
+                               style="background: #adb5bd; color: white;">Shared</a>
+                            <a th:if="${(budget.users.size() == 1) && budget.status.name() == 'ACTIVE'}" th:href="@{/budgets/share(budgetId=${budget.id})}"
+                               class="btn btn-info border-light"
+                               style="background: #1abc9c; color: white;">Share</a>
                             <a th:if="${budget.status.name()} == 'ACTIVE'" th:href="@{/budgets/showEdit(budgetId=${budget.id})}" class="btn btn-info border-light"
                                style="background: #1abc9c; color: white;">Edit</a>
                             <a th:unless="${budget.status.name()} == 'TERMINATED'" th:href="@{/budgets/delete(budgetId=${budget.id})}" class="btn btn-danger"

@@ -4,11 +4,8 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
-import org.springframework.core.annotation.Order;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.UUID;
 
 @Builder
@@ -17,20 +14,33 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-public class Client {
+public class Invitation {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @Column
-    private String firstName;
+    @Column(nullable = false)
+    private UUID senderId;
+
+    @Column(nullable = false)
+    private UUID receiverId;
+
+    @Column(nullable = false)
+    private UUID budgetId;
 
     @Column
-    private String lastName;
+    private String name;
 
-    @Column(unique = true)
-    private String email;
+    @Column
+    private String senderUserName;
+
+    @Column
+    private String receiverUserName;
+
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private InvitationStatus status;
 
     @CreationTimestamp
     private LocalDateTime createdOn;
@@ -38,6 +48,7 @@ public class Client {
     @UpdateTimestamp
     private LocalDateTime updatedOn;
 
-    @OneToOne(mappedBy = "client")
-    private User user;
+    @Column
+    private boolean wasResend;
+
 }

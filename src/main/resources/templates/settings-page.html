@@ -59,11 +59,17 @@
                     <br>
                     <input type="submit" class="btn btn-success" value="Submit" style="width: 30%;"/>
                 </form>
+
                 <div class="text-left gap-10 pt-3">
-                    <a th:if="${user.role.name()} == 'ADMIN'" th:href="@{/settings/admin}" class="btn btn-info border-dark-subtle">Admin panel</a>
+                    <a th:if="${user.role.name()} == 'ADMIN'" th:href="@{/settings/admin}" class="btn btn-danger">Admin panel</a>
                 </div>
+                <div class="text-left gap-10 pt-3">
+                    <a th:if="${invites != 0}" th:href="@{/settings/invites}" class="btn btn-info border-light-subtle">Invitations</a>
+                </div>
+
             </div>
         </div>
+
     </div>
 </header>
 <!-- Copyright Section-->
