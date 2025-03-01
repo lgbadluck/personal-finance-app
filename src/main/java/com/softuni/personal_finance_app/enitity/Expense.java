@@ -33,7 +33,6 @@ public class Expense {
     private BigDecimal amount;
 
     @Column(nullable = false)
-    @DateTimeFormat()
     private LocalDateTime datetimeOfExpense;
 
     @ManyToOne

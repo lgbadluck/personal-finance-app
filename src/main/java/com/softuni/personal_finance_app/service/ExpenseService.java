@@ -12,9 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -96,14 +94,44 @@ public class ExpenseService {
         List<Expense> filteredExpenses;
         List<Expense> expenseList= userService.getAllExpensesByUser(user);
 
-        LocalDateTime startDate = expensesFilterRequest.getFromDate().atStartOfDay(); // Get LocalDate and add Time to be Start of Day at 00:00.00
-        LocalDateTime endDate = expensesFilterRequest.getToDate().plusDays(1).atStartOfDay(); // Get LocalDate and add Time to Be Start of Next Day at 00:00.00
+
+        LocalDateTime startDate;
+        LocalDateTime endDate;
+
         BigDecimal minAmount = expensesFilterRequest.getMinAmount();
         BigDecimal maxAmount = expensesFilterRequest.getMaxAmount();
 
+        if(expensesFilterRequest.getFromDate() != null) {
+            startDate = expensesFilterRequest.getFromDate().atStartOfDay(); // Get LocalDate and add Time to be Start of Day at 00:00.00
+        } else {
+            startDate = null;
+        }
+
+        if(expensesFilterRequest.getToDate() != null) {
+            endDate = expensesFilterRequest.getToDate().plusDays(1).atStartOfDay(); // Get LocalDate and add Time to Be Start of Next Day at 00:00.00
+        } else {
+            endDate = null;
+        }
 
         filteredExpenses = expenseList.stream()
-                .filter(expense -> expense.getDatetimeOfExpense().isAfter(startDate) && expense.getDatetimeOfExpense().isBefore(endDate))
+                .filter(expense -> {
+                    LocalDateTime date = expense.getDatetimeOfExpense();
+                    if (startDate == null) {
+                        if(endDate == null) {
+                            return true;
+                        }
+                        else {
+                            return date.isBefore(endDate);
+                        }
+                    } else {
+                        if (endDate == null) {
+                            return date.isAfter(startDate);
+                        }
+                        else {
+                            return date.isAfter(startDate) && date.isBefore(endDate);
+                        }
+                    }
+                })
                 .filter(expense -> {
                     BigDecimal amount = expense.getAmount();
                     return (minAmount == null || amount.compareTo(minAmount) > 0) &&

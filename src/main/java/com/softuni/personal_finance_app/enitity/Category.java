@@ -37,7 +37,7 @@ public class Category {
     private List<Budget> budgets;
 
     @OneToMany(mappedBy = "category")
-    @OrderBy("createdOn DESC")
+    @OrderBy("datetimeOfExpense DESC, createdOn DESC")
     private List<Expense> expenses;
 
     @CreationTimestamp

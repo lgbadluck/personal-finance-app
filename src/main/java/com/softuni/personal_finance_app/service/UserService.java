@@ -17,10 +17,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 public class UserService implements UserDetailsService {
@@ -112,8 +109,11 @@ public class UserService implements UserDetailsService {
 
         for (Category category : user.getCategories()) {
             expenseList.addAll(category.getExpenses());
-            
         }
+
+        // Sort by Expense Date in DESC order
+        expenseList.sort(Comparator.comparing(Expense::getDatetimeOfExpense).reversed());
+
         return expenseList;
     }
 

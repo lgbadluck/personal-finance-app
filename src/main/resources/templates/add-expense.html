@@ -37,6 +37,7 @@
             <div class="divider-custom-line"></div>
         </div>
     </div>
+
     <!-- Masthead form-->
     <div class="d-flex flex-column justify-content-start text-left gap-10">
         <div class="container d-flex  flex-column" style="width: 75vw">
@@ -44,18 +45,14 @@
                 <form th:action="@{/expenses}" th:method="POST" th:object="${expenseRequest}">
                     <div class="form-group">
                         <!-- Dropdown List for Expense Categories -->
-                        <label for="expenseCategory" class="text-left"><h6>Expense Category :</h6></label>
+                        <label for="expenseCategory" class="text-left"><h6>Expense Category :      <a th:href="@{/category/add}" class="status">ADD NEW</a></h6></label>
                         <select id="expenseCategory" name="expenseCategory" class="form-control" th:field="*{categoryName}" required>
                             <option th:each="category : ${user.categories}" th:value="${category.name}" th:text="${category.name}"> </option>
                         </select>
-                        <div>
-                            <button class="category default" th:href="@{/category/add}">ADD NEW</button></div>
-
                         <p th:if="${#fields.hasErrors('categoryName')}"
                            th:errors="*{categoryName}"
                            class="error"></p>
                     </div>
-
                     <br>
                     <div class="form-group">
                         <label for="amount" class="text-left"><h6>Amount</h6></label>

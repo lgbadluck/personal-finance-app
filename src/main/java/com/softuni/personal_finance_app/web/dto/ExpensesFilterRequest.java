@@ -21,9 +21,7 @@ public class ExpensesFilterRequest {
     @DecimalMin(value = "0.01")
     public BigDecimal maxAmount;
 
-    @NotNull
     public LocalDate fromDate;
 
-    @NotNull
     public LocalDate toDate;
 }
