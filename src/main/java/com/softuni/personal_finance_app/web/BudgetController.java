@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 
+import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.UUID;
 
 @Controller
@@ -125,12 +127,19 @@ public class BudgetController {
         User user = userService.getById(authenticatedUserDetails.getUserId());
 
         Budget budget = budgetService.findBudgetById(budgetId);
+        LocalDateTime budgetEndDate = budgetService.getBudgetEndDate(budget, budget.getCreatedOn());
+
+        HashMap<User, Double> totalAmount = budgetService.getTotalAmountSpentByBudgetUser(budget);
 
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("edit-budget");
         modelAndView.addObject("user", user);
         modelAndView.addObject("budgetRequest", DtoMapper.mapBudgetToBudgetRequest(budget));
         modelAndView.addObject("budgetId", budgetId);
+        modelAndView.addObject("budget", budget);
+        modelAndView.addObject("budgetEndDate", budgetEndDate);
+        modelAndView.addObject("budgetStartDate", budget.getCreatedOn());
+        modelAndView.addObject("totalAmount", totalAmount);
 
         return modelAndView;
     }

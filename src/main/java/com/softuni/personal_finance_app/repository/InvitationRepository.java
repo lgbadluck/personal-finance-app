@@ -9,6 +9,6 @@ import java.util.UUID;
 
 @Repository
 public interface InvitationRepository extends JpaRepository<Invitation, UUID> {
-    List<Invitation> findBySenderId(UUID userId);
-    List<Invitation> findByReceiverId(UUID userId);
+    List<Invitation> findBySenderIdOrderByCreatedOnDesc(UUID userId);
+    List<Invitation> findByReceiverIdOrderByCreatedOnDesc(UUID userId);
 }

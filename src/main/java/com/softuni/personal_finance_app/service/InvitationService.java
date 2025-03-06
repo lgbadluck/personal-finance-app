@@ -23,12 +23,12 @@ public class InvitationService {
 
     public List<Invitation> getSentInvitations(UUID userId) {
 
-        return invitationRepository.findBySenderId(userId);
+        return invitationRepository.findBySenderIdOrderByCreatedOnDesc(userId);
     }
 
     public List<Invitation> getReceivedInvitations(UUID userId) {
 
-        return invitationRepository.findByReceiverId(userId);
+        return invitationRepository.findByReceiverIdOrderByCreatedOnDesc(userId);
     }
 
     public Invitation accept(UUID inviteId) {

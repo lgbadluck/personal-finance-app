@@ -348,6 +348,7 @@ body {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
+.styled-table-a,
 .styled-table {
   border-collapse: collapse;
   margin: 25px 0;
@@ -356,16 +357,78 @@ body {
   width: 100%;
   text-align: left;
 }
-
+.styled-table-a thead tr,
 .styled-table thead tr {
   background-color: #009879;
   color: #ffffff;
   text-align: left;
 }
 
-.styled-table th, .styled-table td {
+.styled-table-a th,
+.styled-table th,
+.styled-table-a td,
+.styled-table td {
   padding: 12px 15px;
+  border: 1px solid #ddd;
 }
+.nested-table-a {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.nested-table-a td {
+  padding: 12px 15px;
+  text-align: left;
+  border: none; /* Remove borders for nested table cells */
+}
+
+.styled-table th:nth-child(1),
+.styled-table td:nth-child(1) {
+  width: 40%; /* Adjust width as needed */
+}
+.styled-table th:nth-child(2),
+.styled-table td:nth-child(2) {
+  width: 10%; /* Adjust width as needed */
+}
+.styled-table th:nth-child(3),
+.styled-table td:nth-child(3) {
+  width: 20%; /* Adjust width as needed */
+}
+.styled-table th:nth-child(4),
+.styled-table td:nth-child(4) {
+  width: 10%; /* Adjust width as needed */
+}
+.styled-table th:nth-child(5),
+.styled-table td:nth-child(5) {
+  width: 20%; /* Adjust width as needed */
+}
+
+/* Ensure nested table columns align with outer table columns */
+.styled-table-a th:nth-child(1),
+.styled-table-a td:nth-child(1) {
+  width: 20%; /* Adjust width as needed */
+}
+
+.styled-table-a th:nth-child(2),
+.styled-table-a td:nth-child(2) {
+  width: 20%; /* Adjust width as needed */
+}
+
+.styled-table-a th:nth-child(3),
+.styled-table-a td:nth-child(3) {
+  width: 20%; /* Adjust width as needed */
+}
+
+.styled-table-a th:nth-child(4),
+.-a td:nth-child(4) {
+  width: 20%; /* Adjust width as needed */
+}
+
+/* Ensure nested table inherits column widths */
+.nested-table-a td {
+  width: inherit; /* Inherit width from parent table */
+}
+
 .flex-cell {
   display: flex;
   align-items: center;

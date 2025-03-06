@@ -96,6 +96,85 @@
             </div>
         </div>
     </div>
+
+    <!-- Masthead form-->
+    <div class="container d-flex align-items-center flex-column pt-5">
+        <div class="card h-100 border-success">
+            <div class="card-body text-left">
+                <span class="hash">name : </span>
+                <span class="card-text"
+                      th:text="${budget.name}"></span><br>
+                <span class="hash">categories :</span>
+                <span th:each="category, iterStat : ${budget.categories}">
+                                    <span th:if="${category.categoryOwner.id == user.id}">
+                                        <span th:text="${category.name}" class="category default"></span>
+                                    </span>
+                                </span><br>
+
+                <span class="hash">limit : </span>
+                <span class="card-text status completed" th:text="${budget.maxToSpend + ' EUR'}"></span><br>
+
+                <span class="hash">spent : </span>
+                <span class="card-text" th:classappend="${budget.spent >= budget.maxToSpend} ? 'status terminated' : 'status active'" th:text="${budget.spent + ' EUR'}"></span><br>
+
+                <span class="hash">start date : </span>
+                <span class="card-text" th:text="${#temporals.format(budget.createdOn, 'dd MMM YYYY HH:mm') + 'h'}">h</span><br>
+
+                <span class="hash">end date : </span>
+                <span class="card-text" th:if="${budget.type.name() == 'WEEK'}"  th:text="${#temporals.format(budget.createdOn.plusWeeks(1),  'dd MMM YYYY HH:mm') + 'h'}"></span>
+                <span class="card-text" th:if="${budget.type.name() == 'MONTH'}" th:text="${#temporals.format(budget.createdOn.plusMonths(1), 'dd MMM YYYY HH:mm') + 'h'}"></span>
+                <span class="card-text" th:if="${budget.type.name() == 'YEAR'}"  th:text="${#temporals.format(budget.createdOn.plusYears(1),  'dd MMM YYYY HH:mm') + 'h'}"></span><br>
+                <span class="hash">type : </span><span class="card-text"
+                                                       th:text="${budget.type.name()}"></span><br>
+
+                <span class="hash">status : </span>
+                <span class="card-text" th:classappend="'status '
+                                                                    + (${budget.status.name()} == 'ACTIVE' ? 'active' : '')
+                                                                    + (${budget.status.name()} == 'COMPLETED' ? 'completed' : '')
+                                                                    + (${budget.status.name()} == 'TERMINATED' ? 'terminated' : '')"
+                      th:text="${budget.status.name()}"></span><br>
+
+                <span class="hash">description : </span>
+                <span class="card-text" th:text="${budget.description}"></span><br>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <table class="styled-table-a" th:each="user : ${budget.getUsers()}">
+            <thead>
+            <tr>
+                <th colspan="1" th:text="${'Expense for: ' + user.username}">Expense list</th>
+            </tr>
+            <tr>
+                <th>Category</th>
+                <th>Description</th>
+                <th>Date</th>
+                <th>Amount</th>
+            </tr>
+            </thead>
+
+            <tbody >
+                <tr th:each="category : ${user.getCategories()}" th:if="${budget.getCategories().contains(category)}">
+                    <td th:text="${category.name}">Category</td>
+                    <td colspan="3">
+                        <table class="nested-table-a">
+                            <tr th:each="expense : ${category.getExpenses()}"
+                                th:if="${expense.datetimeOfExpense.isAfter(budgetStartDate) && expense.datetimeOfExpense.isBefore(budgetEndDate)}">
+                                <td th:text="${expense.description}">Description</td>
+                                <td th:text="${#temporals.format(expense.createdOn, 'dd MMM YYYY HH:mm') + 'h'}">Date</td>
+                                <td th:text="${expense.amount + ' EUR'}">Amount</td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align: right" colspan="3"><strong>Total spent:</strong></td>
+                    <td th:text="${#numbers.formatDecimal(totalAmount.get(user), 1, 2) + ' EUR'}"><strong>Total</strong></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
 </header>
 <!-- Copyright Section-->
 <div class="copyright py-4 text-center text-white">

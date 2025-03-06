@@ -89,7 +89,7 @@ public class BudgetService {
         budgetRepository.save(renewedBudget);
     }
 
-    private static LocalDateTime getBudgetEndDate(Budget budget, LocalDateTime startDate) {
+    public LocalDateTime getBudgetEndDate(Budget budget, LocalDateTime startDate) {
         return switch (budget.getType()) {
                     case WEEK -> startDate.plusWeeks(1);
                     case MONTH -> startDate.plusMonths(1);
@@ -282,5 +282,28 @@ public class BudgetService {
 
         budgetRepository.save(budget);
         userRepository.save(user);
+    }
+
+    public HashMap<User, Double> getTotalAmountSpentByBudgetUser(Budget budget) {
+
+        HashMap<User, Double> totalAmount = new HashMap<>();
+
+        for (User user : budget.getUsers()) {
+            double total = 0.0;
+
+            for (Category category : user.getCategories()) {
+                if( budget.getCategories().contains(category) ) {
+                    for (Expense expense : category.getExpenses()) {
+                        if (expense.getDatetimeOfExpense().isAfter(budget.getCreatedOn()) && expense.getDatetimeOfExpense().isBefore(getBudgetEndDate(budget, budget.getCreatedOn()))) {
+                            total += expense.getAmount().doubleValue();
+                        }
+                    }
+                }
+            }
+
+            totalAmount.put(user, total);
+        }
+
+        return  totalAmount;
     }
 }
