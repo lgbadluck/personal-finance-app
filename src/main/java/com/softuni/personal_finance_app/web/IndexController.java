@@ -1,4 +1,4 @@
-package com.softuni.personal_finance_app.controller;
+package com.softuni.personal_finance_app.web;
 
 import com.softuni.personal_finance_app.enitity.User;
 import com.softuni.personal_finance_app.security.AuthenticatedUserDetails;

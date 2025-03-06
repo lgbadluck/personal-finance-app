@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -52,18 +53,40 @@ public class BudgetService {
             if (endDate.isBefore(now)) {
                 budget.setStatus(BudgetStatus.COMPLETED);
                 budgetRepository.save(budget);
+                System.out.println("%s -==- SCHEDULED-JOB: Found 1 Completed Budget!".formatted(LocalDateTime.now()));
 
                 if(budget.isRenewed()) {
                     renewBudget(budget);
+                    System.out.println("%s -==- SCHEDULED-JOB: Completed Budget was RENEWED!".formatted(LocalDateTime.now()));
                 }
             }
         }
         System.out.println("%s -==- SCHEDULED-JOB: Checked for Completed Budgets!".formatted(LocalDateTime.now()));
     }
 
-    private static void renewBudget(Budget budget) {
-        //TO DO:
+    //@Transactional
+    public void renewBudget(Budget budget) {
 
+        Budget renewedBudget = Budget.builder()
+                .name(budget.getName() + "| RENEW@%s".formatted(LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MMM-yyy"))))
+                .description(budget.getDescription())
+                .maxToSpend(budget.getMaxToSpend())
+                .status(BudgetStatus.ACTIVE)
+                .type(budget.getType())
+                .spent(BigDecimal.ZERO)
+                .isRenewed(budget.isRenewed())
+                .categories(new ArrayList<>(budget.getCategories()))
+                //.users(new ArrayList<>(budget.getUsers()))
+                .users(new ArrayList<>())
+                .createdOn(getBudgetEndDate(budget, budget.getCreatedOn()).plusDays(1))
+                .build();
+
+
+        for (User user : budget.getUsers()) {
+            renewedBudget.addUser(user);
+        }
+
+        budgetRepository.save(renewedBudget);
     }
 
     private static LocalDateTime getBudgetEndDate(Budget budget, LocalDateTime startDate) {
