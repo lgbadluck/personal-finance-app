@@ -20,6 +20,7 @@ public class DataInitializer implements CommandLineRunner {
     private final UserRepository userRepository;
     private final ClientRepository clientRepository;
 
+
     @Autowired
     public DataInitializer(PasswordEncoder passwordEncoder,
                            UserService userService,
@@ -57,4 +58,3 @@ public class DataInitializer implements CommandLineRunner {
         }
     }
 }
-

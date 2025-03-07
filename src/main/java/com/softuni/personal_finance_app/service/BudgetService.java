@@ -26,17 +26,20 @@ public class BudgetService {
     private final CategoryRepository categoryRepository;
     private final UserRepository userRepository;
     private final InvitationRepository invitationRepository;
+    private final NotificationService notificationService;
 
     @Autowired
     public BudgetService(BudgetRepository budgetRepository,
                          CategoryRepository categoryRepository,
                          UserRepository userRepository,
-                         InvitationRepository invitationRepository) {
+                         InvitationRepository invitationRepository,
+                         NotificationService notificationService) {
         this.budgetRepository = budgetRepository;
 
         this.categoryRepository = categoryRepository;
         this.userRepository = userRepository;
         this.invitationRepository = invitationRepository;
+        this.notificationService = notificationService;
     }
 
 
@@ -223,6 +226,11 @@ public class BudgetService {
                 .receiverUserName(receiverUser.getUsername())
                 .status(InvitationStatus.SENT)
                 .build();
+
+        //Send Notification to the receiver
+        String subject = "New Invitation - Budget share";
+        String body = "User [%s] sent you an invitation to share Budget [%s] with you!".formatted(senderUser.getUsername(), budget.getName());
+        notificationService.sendNotification(receiverUser.getId(), subject, body);
 
         invitationRepository.save(invitation);
     }

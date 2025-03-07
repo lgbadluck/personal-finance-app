@@ -4,11 +4,11 @@ import com.softuni.personal_finance_app.enitity.*;
 import com.softuni.personal_finance_app.exception.DomainException;
 import com.softuni.personal_finance_app.repository.CategoryRepository;
 import com.softuni.personal_finance_app.repository.ClientRepository;
-import com.softuni.personal_finance_app.repository.ExpenseRepository;
 import com.softuni.personal_finance_app.repository.UserRepository;
 import com.softuni.personal_finance_app.security.AuthenticatedUserDetails;
 import com.softuni.personal_finance_app.web.dto.ClientEditRequest;
 import com.softuni.personal_finance_app.web.dto.RegisterRequest;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -19,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
+@Slf4j
 @Service
 public class UserService implements UserDetailsService {
 
@@ -26,6 +27,7 @@ public class UserService implements UserDetailsService {
     private final ClientRepository clientRepository;
     private final CategoryRepository categoryRepository;
     private final PasswordEncoder passwordEncoder;
+    private final NotificationService notificationService;
 
     private final List<String> getDefaultCategories;
 
@@ -34,11 +36,13 @@ public class UserService implements UserDetailsService {
                        ClientRepository clientRepository,
                        CategoryRepository categoryRepository,
                        PasswordEncoder passwordEncoder,
+                       NotificationService notificationService,
                        List<String> getDefaultCategories) {
         this.userRepository = userRepository;
         this.clientRepository = clientRepository;
         this.categoryRepository = categoryRepository;
         this.passwordEncoder = passwordEncoder;
+        this.notificationService = notificationService;
         this.getDefaultCategories = getDefaultCategories;
     }
 
@@ -88,6 +92,11 @@ public class UserService implements UserDetailsService {
         userRepository.save(user);
         addDefaultCategoriesToUser(user);
 
+        // Persist new notification preference with isEnabled = false
+        notificationService.saveNotificationPreference(user.getId(), false, user.getClient().getEmail());
+
+        log.info("Successfully create new user account for username [%s] and id [%s]".formatted(user.getUsername(), user.getId()));
+
         return user;
     }
 
@@ -119,9 +128,17 @@ public class UserService implements UserDetailsService {
 
     public void editClientDetails(User user, ClientEditRequest clientEditRequest) {
 
+        if (clientEditRequest.getEmail().isBlank()) {
+            notificationService.saveNotificationPreference(user.getId(), false, clientEditRequest.getEmail());
+        }
+
         user.getClient().setFirstName(clientEditRequest.getFirstName());
         user.getClient().setLastName(clientEditRequest.getLastName());
         user.getClient().setEmail(clientEditRequest.getEmail());
+
+        if (!clientEditRequest.getEmail().isBlank()) {
+            notificationService.saveNotificationPreference(user.getId(), true, clientEditRequest.getEmail());
+        }
 
         userRepository.save(user);
     }
