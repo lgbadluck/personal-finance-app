@@ -1,9 +1,7 @@
 package com.softuni.personal_finance_app.web.dto;
 
-import com.softuni.personal_finance_app.enitity.Category;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 import java.math.BigDecimal;

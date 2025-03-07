@@ -34,7 +34,7 @@ public class DataInitializer implements CommandLineRunner {
 
     @Transactional
     @Override
-    public void run(String... args) throws Exception {
+    public void run(String... args) {
         if (userRepository.findByUsername("admin").isEmpty()) {
 
             Client adminClient = Client.builder()

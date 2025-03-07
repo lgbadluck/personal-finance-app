@@ -5,7 +5,6 @@ import com.softuni.personal_finance_app.enitity.User;
 import com.softuni.personal_finance_app.security.AuthenticatedUserDetails;
 import com.softuni.personal_finance_app.service.ExpenseService;
 import com.softuni.personal_finance_app.service.UserService;
-import com.softuni.personal_finance_app.web.dto.BudgetRequest;
 import com.softuni.personal_finance_app.web.dto.ExpensesFilterRequest;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;

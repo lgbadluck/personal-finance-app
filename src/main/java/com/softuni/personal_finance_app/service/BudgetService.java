@@ -17,7 +17,6 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 public class BudgetService {
@@ -56,15 +55,15 @@ public class BudgetService {
             if (endDate.isBefore(now)) {
                 budget.setStatus(BudgetStatus.COMPLETED);
                 budgetRepository.save(budget);
-                System.out.println("%s -==- SCHEDULED-JOB: Found 1 Completed Budget!".formatted(LocalDateTime.now()));
+                System.out.printf("%s -==- SCHEDULED-JOB: Found 1 Completed Budget!%n", LocalDateTime.now());
 
                 if(budget.isRenewed()) {
                     renewBudget(budget);
-                    System.out.println("%s -==- SCHEDULED-JOB: Completed Budget was RENEWED!".formatted(LocalDateTime.now()));
+                    System.out.printf("%s -==- SCHEDULED-JOB: Completed Budget was RENEWED!%n", LocalDateTime.now());
                 }
             }
         }
-        System.out.println("%s -==- SCHEDULED-JOB: Checked for Completed Budgets!".formatted(LocalDateTime.now()));
+        System.out.printf("%s -==- SCHEDULED-JOB: Checked for Completed Budgets!%n", LocalDateTime.now());
     }
 
     //@Transactional
@@ -167,7 +166,7 @@ public class BudgetService {
         budget.setDescription(budgetRequest.getDescription());
         budget.setMaxToSpend(budgetRequest.getMaxToSpend());
         budget.setType(budgetRequest.getType());
-        budget.setCategories(budgetRequest.getSelectedCategories()); // TO DO: Create a method to Change Categories for shared Users also!
+        budget.setCategories(budgetRequest.getSelectedCategories());
         budget.setRenewed(budgetRequest.isRenewed());
 
         budgetRepository.save(budget);
@@ -244,12 +243,6 @@ public class BudgetService {
         User user = userRepository.findById(acceptedInvitation.getReceiverId())
                 .orElseThrow(() -> new DomainException("User not found - User id [%s]".formatted(acceptedInvitation.getReceiverId())));
 
-        /*
-        List<Category> userMissingCategories = budget.getCategories().stream()
-                .filter(budgetCategory -> user.getCategories().stream()
-                        .noneMatch(userCategory -> userCategory.getName().equals(budgetCategory.getName())))
-                .toList();
-        */
         List<Category> userMissingCategories = new ArrayList<>();
         List<Category> userPresentCategories = new ArrayList<>();
 
