@@ -48,6 +48,7 @@
                                     <div th:if="${#fields.hasErrors('username')}"
                                           th:errors="*{username}"
                                           class="error"></div>
+                                    <p class="alert-warning" th:text="${usernameAlreadyExistMessage}"></p>
                                 </div>
                                 <div class="col-12">
                                     <div class="form-floating mb-3">
