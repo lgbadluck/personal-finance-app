@@ -254,6 +254,7 @@ body {
   color: #2e7d32;
   border: 1px solid rgba(84, 227, 54, 0.6);
   box-shadow: 0 4px 8px rgba(0, 153, 51, 0.15);
+  width: fit-content;
 }
 
 .status.terminated {
@@ -262,6 +263,7 @@ body {
   letter-spacing: 0.03em;
   border: 1px solid rgba(255, 103, 103, 0.6);
   box-shadow: 0 4px 8px rgba(255, 103, 103, 0.2);
+  width: fit-content;
 }
 
 .status.completed {
@@ -269,7 +271,24 @@ body {
   color: #ff852c;
   border: 1px solid rgba(255, 144, 103, 0.6);
   box-shadow: 0 4px 8px rgba(255, 184, 103, 0.2);
+  width: fit-content;
+}
 
+.status.succeeded {
+  background-color: #e0f7e9;
+  color: #2e7d32;
+  border: 1px solid rgba(84, 227, 54, 0.6);
+  box-shadow: 0 4px 8px rgba(0, 153, 51, 0.15);
+  width: fit-content;
+}
+
+.status.failed {
+  background-color: #fbe9e7;
+  color: #c62828;
+  letter-spacing: 0.03em;
+  border: 1px solid rgba(255, 103, 103, 0.6);
+  box-shadow: 0 4px 8px rgba(255, 103, 103, 0.2);
+  width: fit-content;
 }
 
 .category {
@@ -359,7 +378,6 @@ body {
 }
 .styled-table-a thead tr,
 .styled-table thead tr {
-  background-color: #009879;
   color: #ffffff;
   text-align: left;
 }

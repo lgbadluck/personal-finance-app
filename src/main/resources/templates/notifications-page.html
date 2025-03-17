@@ -103,6 +103,7 @@
 
             <p>General Actions:</p>
             <div class="allowed-notification-actions">
+            <form th:action="@{/notifications}" th:method="DELETE">
                 <button class="profile-actions-button">
                     <p>Clear History</p>
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -110,6 +111,8 @@
                               fill="currentColor"/>
                     </svg>
                 </button>
+            </form>
+            <form th:action="@{/notifications}" th:method="PUT">
                 <button class="profile-actions-button">
                     <p>Retry Failed</p>
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -117,7 +120,8 @@
                               fill="currentColor"/>
                     </svg>
                 </button>
-            </div>
+            </form>
+        </div>
 
             <p class="small-informative-text-bottom">Any action that you take will affect the notification mechanism for your account!</p>
         </div>
@@ -126,7 +130,7 @@
             <h2>Notification History</h2>
             <p>Your last 5 notifications from us:</p>
 
-            <table class="styled-table" th:unless="${#lists.isEmpty(notificationHistory)}">
+            <table class="styled-table" th:unless="${#lists.isEmpty(notificationHistory)}" >
                 <thead>
                 <tr>
                     <th>Subject</th>
