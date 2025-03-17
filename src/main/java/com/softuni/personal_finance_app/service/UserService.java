@@ -2,6 +2,7 @@ package com.softuni.personal_finance_app.service;
 
 import com.softuni.personal_finance_app.enitity.*;
 import com.softuni.personal_finance_app.exception.DomainException;
+import com.softuni.personal_finance_app.exception.UsernameAlreadyExistException;
 import com.softuni.personal_finance_app.repository.CategoryRepository;
 import com.softuni.personal_finance_app.repository.ClientRepository;
 import com.softuni.personal_finance_app.repository.UserRepository;
@@ -52,7 +53,7 @@ public class UserService implements UserDetailsService {
         Optional<User> userOptional = userRepository.findByUsername(registerRequest.getUsername());
 
         if(userOptional.isPresent()) {
-            throw new DomainException("Username already exists: [%s]".formatted(registerRequest.getUsername()));
+            throw new UsernameAlreadyExistException("Username already exists: [%s]".formatted(registerRequest.getUsername()));
         }
 
         Client client  = Client.builder()
