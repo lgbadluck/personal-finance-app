@@ -1,11 +1,13 @@
 package com.softuni.personal_finance_app.service;
 
+import com.softuni.personal_finance_app.exception.FeignCallException;
 import com.softuni.personal_finance_app.web.dto.Notification;
 import com.softuni.personal_finance_app.web.dto.NotificationRequest;
 import com.softuni.personal_finance_app.web.dto.NotificationSettings;
 import com.softuni.personal_finance_app.web.dto.UpsertNotificationSettings;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +19,9 @@ import java.util.UUID;
 public class NotificationService {
 
     private final NotificationClient notificationClient;
+
+    @Value("${notification-svc.failure-message.clear-history}")
+    private String clearHistoryFailedMessage;
 
     @Autowired
     public NotificationService(NotificationClient notificationClient) {
@@ -83,6 +88,26 @@ public class NotificationService {
             notificationClient.updateNotificationSettings(userId, enabled);
         } catch (Exception e) {
             log.warn("Can't update notification preferences for user with id = [%s].".formatted(userId));
+        }
+    }
+
+    public void clearHistory(UUID userId) {
+
+        try {
+            notificationClient.clearHistory(userId);
+        } catch (Exception e) {
+            log.error("Unable to call notification-svc for clear notification history.");
+            throw new FeignCallException(clearHistoryFailedMessage);
+        }
+    }
+
+    public void retryFailed(UUID userId) {
+
+        try {
+            notificationClient.retryFailedNotifications(userId);
+        } catch (Exception e) {
+            log.error("Unable to call notification-svc for re-send of failed notifications.");
+            throw new FeignCallException(clearHistoryFailedMessage);
         }
     }
 }

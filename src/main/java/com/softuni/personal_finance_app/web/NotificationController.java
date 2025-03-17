@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
+import java.util.UUID;
 
 @Controller
 @RequestMapping("/notifications")
@@ -55,6 +56,26 @@ public class NotificationController {
                                                 @AuthenticationPrincipal AuthenticatedUserDetails authenticatedUserDetails) {
 
         notificationService.updateNotificationSettings(authenticatedUserDetails.getUserId(), enabled);
+
+        return "redirect:/notifications";
+    }
+
+    @DeleteMapping
+    public String deleteNotificationHistory(@AuthenticationPrincipal AuthenticatedUserDetails authenticatedUserDetails) {
+
+        UUID userId = authenticatedUserDetails.getUserId();
+
+        notificationService.clearHistory(userId);
+
+        return "redirect:/notifications";
+    }
+
+    @PutMapping
+    public String retryFailedNotifications(@AuthenticationPrincipal AuthenticatedUserDetails authenticatedUserDetails) {
+
+        UUID userId = authenticatedUserDetails.getUserId();
+
+        notificationService.retryFailed(userId);
 
         return "redirect:/notifications";
     }
