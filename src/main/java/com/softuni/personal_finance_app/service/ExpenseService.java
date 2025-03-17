@@ -8,7 +8,10 @@ import com.softuni.personal_finance_app.repository.CategoryRepository;
 import com.softuni.personal_finance_app.repository.ExpenseRepository;
 import com.softuni.personal_finance_app.web.dto.ExpenseRequest;
 import com.softuni.personal_finance_app.web.dto.ExpensesFilterRequest;
+import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEvent;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -17,20 +20,36 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+
 @Service
 public class ExpenseService {
+
+    @Getter
+    public static class ExpenseCreatedEvent extends ApplicationEvent {
+        private final Expense expense;
+
+        public ExpenseCreatedEvent(Object source, Expense expense) {
+            super(source);
+            this.expense = expense;
+        }
+
+    }
 
     private final ExpenseRepository expenseRepository;
     private final CategoryRepository categoryRepository;
     private final UserService userService;
 
+    private final ApplicationEventPublisher eventPublisher;
+
     @Autowired
     public ExpenseService(ExpenseRepository expenseRepository,
                           CategoryRepository categoryRepository,
-                          UserService userService) {
+                          UserService userService,
+                          ApplicationEventPublisher eventPublisher) {
         this.expenseRepository = expenseRepository;
         this.categoryRepository = categoryRepository;
         this.userService = userService;
+        this.eventPublisher = eventPublisher;
     }
 
     public void saveExpense(ExpenseRequest expenseRequest, User user) {
@@ -38,12 +57,14 @@ public class ExpenseService {
             Category category = categoryRepository.findByNameAndCategoryOwner(expenseRequest.getCategoryName(), user)
                     .orElseThrow(() -> new DomainException("No such category name [%s] for user id [%s]".formatted(expenseRequest.getCategoryName(), user.getId().toString())));
 
-            expenseRepository.save(Expense.builder()
+            Expense expense = expenseRepository.save(Expense.builder()
                             .category(category)
                             .amount(expenseRequest.getAmount())
                             .datetimeOfExpense(expenseRequest.getDateTimeOfExpense())
                             .description(expenseRequest.getDescription())
                     .build());
+
+            eventPublisher.publishEvent(new ExpenseCreatedEvent(this, expense));
     }
 
     public Expense findExpenseById(UUID expenseId) {
@@ -65,6 +86,8 @@ public class ExpenseService {
         expense.setCategory(category);
 
         expenseRepository.save(expense);
+
+        eventPublisher.publishEvent(new ExpenseCreatedEvent(this, expense));
     }
 
     public void deleteExpenseByIdAndOwner(UUID expenseId, User user) {
