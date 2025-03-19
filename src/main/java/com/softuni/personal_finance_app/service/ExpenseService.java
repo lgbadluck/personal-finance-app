@@ -74,7 +74,8 @@ public class ExpenseService {
 
     public void updateExpense(UUID expenseId, ExpenseRequest expenseRequest, User user) {
 
-        Expense expense = expenseRepository.findById(expenseId).orElseThrow(() -> new DomainException("Can't find Expense id [%s]".formatted(expenseId.toString())));
+        Expense expense = expenseRepository.findById(expenseId)
+                .orElseThrow(() -> new DomainException("Can't find Expense id [%s]".formatted(expenseId.toString())));
 
         Category category = categoryRepository.findByNameAndCategoryOwner(expenseRequest.getCategoryName(), user)
                 .orElseThrow(() -> new DomainException("No such category name [%s] for user id [%s]".formatted(expenseRequest.getCategoryName(), user.getId().toString())));
@@ -115,7 +116,7 @@ public class ExpenseService {
     public List<Expense> getFilteredExpensesForUser(ExpensesFilterRequest expensesFilterRequest, User user) {
 
         List<Expense> filteredExpenses;
-        List<Expense> expenseList= userService.getAllExpensesByUser(user);
+        List<Expense> expenseList = userService.getAllExpensesByUser(user);
 
 
         LocalDateTime startDate;
