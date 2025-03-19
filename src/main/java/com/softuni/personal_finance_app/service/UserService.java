@@ -30,7 +30,7 @@ public class UserService implements UserDetailsService {
     private final PasswordEncoder passwordEncoder;
     private final NotificationService notificationService;
 
-    private final List<String> getDefaultCategories;
+    List<String> getDefaultCategories;
 
     @Autowired
     public UserService(UserRepository userRepository,
