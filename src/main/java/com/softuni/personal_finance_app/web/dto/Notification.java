@@ -14,4 +14,7 @@ public class Notification {
     private String status;
 
     private String type;
+
+    public void setId(int i) {
+    }
 }
