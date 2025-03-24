@@ -46,14 +46,14 @@
             <div class="details-section">
                 <div class="details-section-container">
                     <strong>Notification type: </strong>
-                    <p th:text="${notificationPreference.type}"></p>
+                    <p th:text="${notificationSettings.type}"></p>
                 </div>
             </div>
 
             <div class="details-section">
                 <div class="details-section-container">
                     <strong>Source: </strong>
-                    <p th:text="${#strings.isEmpty(notificationPreference.contactInfo) ? 'Edit profile and add email' : notificationPreference.contactInfo}"></p>
+                    <p th:text="${#strings.isEmpty(notificationSettings.contactInfo) ? 'Edit profile and add email' : notificationSettings.contactInfo}"></p>
                 </div>
             </div>
 
@@ -74,14 +74,14 @@
             <div class="details-section">
                 <div class="details-section-container">
                     <strong>Notification state: </strong>
-                    <p class="enabled-notification-status" th:if="${notificationPreference.enabled}">ENABLED</p>
-                    <p class="disabled-notification-status" th:unless="${notificationPreference.enabled}">DISABLED</p>
+                    <p class="enabled-notification-status" th:if="${notificationSettings.enabled}">ENABLED</p>
+                    <p class="disabled-notification-status" th:unless="${notificationSettings.enabled}">DISABLED</p>
                 </div>
             </div>
 
             <p>Change State:</p>
             <div class="allowed-notification-actions">
-                <form th:action="@{/notifications/user-settings(enabled=false)}" th:method="PUT" th:if="${notificationPreference.enabled}">
+                <form th:action="@{/notifications/user-settings(enabled=false)}" th:method="PUT" th:if="${notificationSettings.enabled}">
                     <button class="profile-actions-button disable-notifications">
                         <p>Disable Notifications</p>
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -90,7 +90,7 @@
                         </svg>
                     </button>
                 </form>
-                <form th:action="@{/notifications/user-settings(enabled=true)}" th:method="PUT" th:unless="${notificationPreference.enabled}">
+                <form th:action="@{/notifications/user-settings(enabled=true)}" th:method="PUT" th:unless="${notificationSettings.enabled}">
                     <button class="profile-actions-button enable-notifications">
                         <p>Enable Notifications</p>
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">

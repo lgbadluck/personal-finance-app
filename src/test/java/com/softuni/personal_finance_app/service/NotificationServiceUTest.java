@@ -22,6 +22,7 @@ import org.springframework.test.context.ActiveProfiles;
 import java.util.List;
 import java.util.UUID;
 
+import static com.softuni.personal_finance_app.TestBuilder.aRandomNotification;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
@@ -129,12 +130,10 @@ public class NotificationServiceUTest {
 
         // Given
         UUID userId = UUID.randomUUID();
-        Notification notification1 = new Notification();
-        notification1.setId(1); // Replace with actual fields
+        Notification notification1 = aRandomNotification();
         notification1.setSubject("Notification 1");
 
-        Notification notification2 = new Notification();
-        notification2.setId(2); // Replace with actual fields
+        Notification notification2 = aRandomNotification();
         notification2.setSubject("Notification 2");
 
         List<Notification> notificationList = List.of(notification1, notification2);
