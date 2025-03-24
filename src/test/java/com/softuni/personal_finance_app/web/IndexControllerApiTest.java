@@ -133,7 +133,6 @@ public class IndexControllerApiTest {
         MockHttpServletRequestBuilder request = post("/register")
                 .formField("username", "")
                 .formField("password", "")
-                .formField("country", "BULGARIA")
                 .with(csrf());
 
         // 2. Send Request

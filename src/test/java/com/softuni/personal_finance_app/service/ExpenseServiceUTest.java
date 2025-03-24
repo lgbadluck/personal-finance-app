@@ -379,7 +379,7 @@ public class ExpenseServiceUTest {
                 .build();
         List<Expense> expenseList = List.of(expense1, expense2, expense3);
 
-        ExpensesFilterRequest expensesFilterRequest = new ExpensesFilterRequest();
+        ExpensesFilterRequest expensesFilterRequest = ExpensesFilterRequest.builder().build();
         expensesFilterRequest.setCategoryName(category1.getName());
         expensesFilterRequest.setMinAmount(BigDecimal.valueOf(1));
         expensesFilterRequest.setMaxAmount(BigDecimal.valueOf(19));
@@ -433,7 +433,7 @@ public class ExpenseServiceUTest {
                 .build();
         List<Expense> expenseList = List.of(expense1, expense2, expense3);
 
-        ExpensesFilterRequest expensesFilterRequest = new ExpensesFilterRequest();
+        ExpensesFilterRequest expensesFilterRequest = ExpensesFilterRequest.builder().build();
         expensesFilterRequest.setCategoryName(category1.getName());
 //        expensesFilterRequest.setMinAmount(BigDecimal.valueOf(1));
 //        expensesFilterRequest.setMaxAmount(BigDecimal.valueOf(19));
@@ -488,7 +488,7 @@ public class ExpenseServiceUTest {
                 .build();
         List<Expense> expenseList = List.of(expense1, expense2, expense3);
 
-        ExpensesFilterRequest expensesFilterRequest = new ExpensesFilterRequest();
+        ExpensesFilterRequest expensesFilterRequest = ExpensesFilterRequest.builder().build();
         expensesFilterRequest.setCategoryName("all");
         expensesFilterRequest.setMinAmount(BigDecimal.valueOf(11));
 //        expensesFilterRequest.setMaxAmount(BigDecimal.valueOf(19));
@@ -543,7 +543,7 @@ public class ExpenseServiceUTest {
                 .build();
         List<Expense> expenseList = List.of(expense1, expense2, expense3);
 
-        ExpensesFilterRequest expensesFilterRequest = new ExpensesFilterRequest();
+        ExpensesFilterRequest expensesFilterRequest = ExpensesFilterRequest.builder().build();
         expensesFilterRequest.setCategoryName("all");
 //        expensesFilterRequest.setMinAmount(BigDecimal.valueOf(11));
         expensesFilterRequest.setMaxAmount(BigDecimal.valueOf(20));
@@ -598,7 +598,7 @@ public class ExpenseServiceUTest {
                 .build();
         List<Expense> expenseList = List.of(expense1, expense2, expense3);
 
-        ExpensesFilterRequest expensesFilterRequest = new ExpensesFilterRequest();
+        ExpensesFilterRequest expensesFilterRequest = ExpensesFilterRequest.builder().build();
         expensesFilterRequest.setCategoryName("all");
 //        expensesFilterRequest.setMinAmount(BigDecimal.valueOf(11));
 //        expensesFilterRequest.setMaxAmount(BigDecimal.valueOf(20));
@@ -654,7 +654,7 @@ public class ExpenseServiceUTest {
                 .build();
         List<Expense> expenseList = List.of(expense1, expense2, expense3);
 
-        ExpensesFilterRequest expensesFilterRequest = new ExpensesFilterRequest();
+        ExpensesFilterRequest expensesFilterRequest = ExpensesFilterRequest.builder().build();
         expensesFilterRequest.setCategoryName("all");
 //        expensesFilterRequest.setMinAmount(BigDecimal.valueOf(11));
 //        expensesFilterRequest.setMaxAmount(BigDecimal.valueOf(20));

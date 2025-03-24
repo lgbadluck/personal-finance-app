@@ -75,7 +75,7 @@ public class ExpensesController {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("expenses-page");
         modelAndView.addObject("user", user);
-        modelAndView.addObject("expensesFilterRequest", new ExpensesFilterRequest());
+        modelAndView.addObject("expensesFilterRequest", ExpensesFilterRequest.builder().build());
         modelAndView.addObject("expenseList", expenseList);
         modelAndView.addObject("activePage", "expenses");
 
