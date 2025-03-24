@@ -36,7 +36,7 @@ public class CategoriesController {
 
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("add-category");
-        modelAndView.addObject("categoryRequest", new CategoryRequest());
+        modelAndView.addObject("categoryRequest", CategoryRequest.builder().build());
         modelAndView.addObject("user", user);
 
         return modelAndView;
@@ -46,11 +46,11 @@ public class CategoriesController {
     public ModelAndView processCategoryRequest(@Valid CategoryRequest categoryRequest, BindingResult bindingResult,
                               @AuthenticationPrincipal AuthenticatedUserDetails authenticatedUserDetails) {
 
+        User user = userService.getById(authenticatedUserDetails.getUserId());
+
         if(bindingResult.hasErrors()) {
             return new ModelAndView("add-category");
         }
-
-        User user = userService.getById(authenticatedUserDetails.getUserId());
 
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("redirect:/expenses/add");

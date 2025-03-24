@@ -30,7 +30,7 @@ public class CategoryServiceUTest {
     void givenExistingCategoryInDatabase_whenSaveCategory_thenExceptionIsThrown() {
 
         // Given
-        CategoryRequest categoryRequest = new CategoryRequest();
+        CategoryRequest categoryRequest = CategoryRequest.builder().build();
         categoryRequest.setName("Transportation");
         User user = User.builder()
                 .id(UUID.randomUUID())
@@ -49,7 +49,7 @@ public class CategoryServiceUTest {
     void happyPath_whenSaveCategory() {
 
         // Given
-        CategoryRequest categoryRequest = new CategoryRequest();
+        CategoryRequest categoryRequest = CategoryRequest.builder().build();
         categoryRequest.setName("Transportation");
         User user = User.builder()
                 .id(UUID.randomUUID())
