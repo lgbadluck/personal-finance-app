@@ -2,7 +2,6 @@ package com.softuni.personal_finance_app.web;
 
 import com.softuni.personal_finance_app.enitity.Category;
 import com.softuni.personal_finance_app.enitity.Expense;
-import com.softuni.personal_finance_app.enitity.Invitation;
 import com.softuni.personal_finance_app.enitity.Role;
 import com.softuni.personal_finance_app.security.AuthenticatedUserDetails;
 import com.softuni.personal_finance_app.service.ExpenseService;
