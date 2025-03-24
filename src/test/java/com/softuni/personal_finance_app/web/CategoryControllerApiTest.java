@@ -1,15 +1,10 @@
 package com.softuni.personal_finance_app.web;
 
-import com.softuni.personal_finance_app.enitity.Category;
-import com.softuni.personal_finance_app.enitity.Expense;
-import com.softuni.personal_finance_app.enitity.Invitation;
 import com.softuni.personal_finance_app.enitity.Role;
 import com.softuni.personal_finance_app.security.AuthenticatedUserDetails;
 import com.softuni.personal_finance_app.service.CategoryService;
 import com.softuni.personal_finance_app.service.UserService;
 import com.softuni.personal_finance_app.web.dto.CategoryRequest;
-import com.softuni.personal_finance_app.web.dto.ExpensesFilterRequest;
-import com.softuni.personal_finance_app.web.dto.NotificationSettings;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -17,13 +12,8 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
-import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.List;
 import java.util.UUID;
 
-import static com.softuni.personal_finance_app.TestBuilder.aRandomNotification;
 import static com.softuni.personal_finance_app.TestBuilder.aRandomUser;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
