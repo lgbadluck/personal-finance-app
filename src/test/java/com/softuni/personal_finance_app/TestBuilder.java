@@ -1,4 +1,4 @@
-package com;
+package com.softuni.personal_finance_app;
 
 import com.softuni.personal_finance_app.enitity.Role;
 import com.softuni.personal_finance_app.enitity.User;
