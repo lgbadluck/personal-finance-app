@@ -8,6 +8,7 @@ import lombok.experimental.UtilityClass;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -98,10 +99,14 @@ public class TestBuilder {
                 .id(UUID.randomUUID())
                 .name("Category Name 1")
                 .description("Category Description 1")
-                .expenses(List.of(aRandomExpense(), aRandomExpense()))
-                .budgets(List.of(aRandomBudget()))
+                .expenses(new ArrayList<>())
+                .budgets(new ArrayList<>())
                 .categoryOwner(aRandomUser())
                 .build();
+
+        category.getExpenses().add(aRandomExpense());
+        category.getExpenses().add(aRandomExpense());
+        category.getBudgets().add(aRandomBudget());
 
         return category;
     }
@@ -112,6 +117,7 @@ public class TestBuilder {
         User user2 = aRandomUser();
 
         Budget budget = Budget.builder()
+                .id(UUID.randomUUID())
                 .name("Budget Name 1")
                 .description("Budget Description 1")
                 .users(List.of(user1, user2))

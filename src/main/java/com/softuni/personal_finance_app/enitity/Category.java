@@ -1,5 +1,6 @@
 package com.softuni.personal_finance_app.enitity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -28,14 +29,17 @@ public class Category {
     private String description;
 
     @ManyToOne
+    @JsonIgnore // Exclude from serialization
     private User categoryOwner;
 
     @ManyToMany(mappedBy = "categories")
     @OrderBy("createdOn DESC")
+    @JsonIgnore // Exclude from serialization
     private List<Budget> budgets;
 
     @OneToMany(mappedBy = "category")
     @OrderBy("datetimeOfExpense DESC, createdOn DESC")
+    @JsonIgnore // Exclude from serialization
     private List<Expense> expenses;
 
     @CreationTimestamp

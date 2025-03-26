@@ -153,7 +153,7 @@ public class BudgetController {
 
     @PutMapping("/submitEdit")
     public ModelAndView processBudgetEditUpdate(@RequestParam("budgetId") UUID budgetId,
-                                             @Valid BudgetRequest budgetRequest, BindingResult bindingResult,
+                                                @RequestBody @Valid BudgetRequest budgetRequest, BindingResult bindingResult,
                                              @AuthenticationPrincipal AuthenticatedUserDetails authenticatedUserDetails){
 
         User user = userService.getById(authenticatedUserDetails.getUserId());
@@ -169,7 +169,7 @@ public class BudgetController {
             modelAndView.setViewName("edit-budget");
             modelAndView.addObject("user", user);
             modelAndView.addObject("budgetRequest", budgetRequest);
-            modelAndView.addObject("budgetId", budgetId);
+            modelAndView.addObject("budgetId", budget.getId());
             modelAndView.addObject("budget", budget);
             modelAndView.addObject("budgetEndDate", budgetEndDate);
             modelAndView.addObject("budgetStartDate", budget.getCreatedOn());

@@ -1,5 +1,8 @@
 package com.softuni.personal_finance_app.web.dto;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.softuni.personal_finance_app.enitity.BudgetType;
 import com.softuni.personal_finance_app.enitity.Category;
 import jakarta.validation.constraints.DecimalMin;
