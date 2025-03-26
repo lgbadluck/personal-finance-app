@@ -16,8 +16,9 @@ public class TestBuilder {
 
     public static User aRandomUser() {
 
+        UUID userId = UUID.randomUUID();
         User user = User.builder()
-                .id(UUID.randomUUID())
+                .id(userId)
                 .username("User123")
                 .password("123123")
                 .role(Role.USER)
@@ -32,10 +33,13 @@ public class TestBuilder {
                                 .name("Category 1")
                                 .build(),
                         Category.builder()
-                                .name("Category 1")
+                                .name("Category 2")
                                 .build()
                 ))
                 .build();
+
+        user.getCategories().get(0).setCategoryOwner(user);
+        user.getCategories().get(1).setCategoryOwner(user);
 
         return user;
     }
@@ -86,5 +90,49 @@ public class TestBuilder {
                 .build();
 
         return expense;
+    }
+
+    public static Category aRandomCategory() {
+
+        Category category = Category.builder()
+                .id(UUID.randomUUID())
+                .name("Category Name 1")
+                .description("Category Description 1")
+                .expenses(List.of(aRandomExpense(), aRandomExpense()))
+                .budgets(List.of(aRandomBudget()))
+                .categoryOwner(aRandomUser())
+                .build();
+
+        return category;
+    }
+
+    public static Budget aRandomBudget() {
+
+        User user1 = aRandomUser();
+        User user2 = aRandomUser();
+
+        Budget budget = Budget.builder()
+                .name("Budget Name 1")
+                .description("Budget Description 1")
+                .users(List.of(user1, user2))
+                .spent(BigDecimal.valueOf(0.01))
+                .maxToSpend(BigDecimal.valueOf(1000.01))
+                .status(BudgetStatus.ACTIVE)
+                .type(BudgetType.MONTH)
+                .isRenewed(true)
+                .categories(List.of(
+                        Category.builder()
+                                .name("Category 1")
+                                .categoryOwner(user1)
+                                .build(),
+                        Category.builder()
+                                .name("Category 2")
+                                .categoryOwner(user2)
+                                .build()
+                ))
+                .createdOn(LocalDateTime.now())
+                .build();
+
+        return budget;
     }
 }

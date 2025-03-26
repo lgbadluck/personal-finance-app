@@ -16,7 +16,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
-
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.UUID;
@@ -44,6 +43,7 @@ public class BudgetController {
 
         Budget budget = budgetService.findBudgetById(budgetId);
 
+
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("share-budget");
         modelAndView.addObject("user", user);
@@ -59,11 +59,18 @@ public class BudgetController {
                                                   @Valid ShareBudgetRequest shareBudgetRequest, BindingResult bindingResult,
                                                   @AuthenticationPrincipal AuthenticatedUserDetails authenticatedUserDetails) {
 
+        User user = userService.getById(authenticatedUserDetails.getUserId());
+
         if(bindingResult.hasErrors()) {
-            return new ModelAndView("share-budget");
+            Budget budget = budgetService.findBudgetById(budgetId);
+            ModelAndView modelAndView = new ModelAndView();
+            modelAndView.setViewName("share-budget");
+            modelAndView.addObject("user", user);
+            modelAndView.addObject("shareBudgetRequest", shareBudgetRequest);
+            modelAndView.addObject("budget", budget);
+            return modelAndView;
         }
 
-        User user = userService.getById(authenticatedUserDetails.getUserId());
 
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("redirect:/budgets");
@@ -81,7 +88,7 @@ public class BudgetController {
 
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("add-budget");
-        modelAndView.addObject("budgetRequest", new BudgetRequest());
+        modelAndView.addObject("budgetRequest", BudgetRequest.builder().build());
         modelAndView.addObject("user", user);
         modelAndView.addObject("activePage", "budgets-add");
 
@@ -150,13 +157,23 @@ public class BudgetController {
                                              @AuthenticationPrincipal AuthenticatedUserDetails authenticatedUserDetails){
 
         User user = userService.getById(authenticatedUserDetails.getUserId());
+        Budget budget = budgetService.findBudgetById(budgetId);
 
         if (bindingResult.hasErrors()) {
+            // For Testing
+            LocalDateTime budgetEndDate = budgetService.getBudgetEndDate(budget, budget.getCreatedOn());
+            HashMap<User, Double> totalAmount = new HashMap<>();
+            totalAmount.put(user, 0.00);
+
             ModelAndView modelAndView = new ModelAndView();
             modelAndView.setViewName("edit-budget");
             modelAndView.addObject("user", user);
             modelAndView.addObject("budgetRequest", budgetRequest);
             modelAndView.addObject("budgetId", budgetId);
+            modelAndView.addObject("budget", budget);
+            modelAndView.addObject("budgetEndDate", budgetEndDate);
+            modelAndView.addObject("budgetStartDate", budget.getCreatedOn());
+            modelAndView.addObject("totalAmount", totalAmount);
             return modelAndView;
         }
 
