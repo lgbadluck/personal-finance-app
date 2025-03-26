@@ -41,7 +41,7 @@ public class ExpensesController {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("add-expense");
         modelAndView.addObject("user", user);
-        modelAndView.addObject("expenseRequest", new ExpenseRequest());
+        modelAndView.addObject("expenseRequest", ExpenseRequest.builder().build());
         modelAndView.addObject("activePage", "expenses-add");
 
 
@@ -57,7 +57,11 @@ public class ExpensesController {
 
 
         if (bindingResult.hasErrors()) {
-            return new ModelAndView("add-expense");
+            ModelAndView modelAndView = new ModelAndView();
+            modelAndView.setViewName("add-expense");
+            modelAndView.addObject("user", user);
+            modelAndView.addObject("expenseRequest", expenseRequest);
+            return modelAndView;
         }
 
         expenseService.saveExpense(expenseRequest, user);

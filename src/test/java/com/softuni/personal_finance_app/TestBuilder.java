@@ -1,14 +1,14 @@
 package com.softuni.personal_finance_app;
 
-import com.softuni.personal_finance_app.enitity.Client;
-import com.softuni.personal_finance_app.enitity.Role;
-import com.softuni.personal_finance_app.enitity.User;
+import com.softuni.personal_finance_app.enitity.*;
 import com.softuni.personal_finance_app.web.dto.ClientEditRequest;
 import com.softuni.personal_finance_app.web.dto.Notification;
 import com.softuni.personal_finance_app.web.dto.NotificationSettings;
 import lombok.experimental.UtilityClass;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 @UtilityClass
@@ -27,6 +27,14 @@ public class TestBuilder {
                         .lastName("nameLast")
                         .email("email@email.com")
                         .build())
+                .categories(List.of(
+                        Category.builder()
+                                .name("Category 1")
+                                .build(),
+                        Category.builder()
+                                .name("Category 1")
+                                .build()
+                ))
                 .build();
 
         return user;
@@ -64,5 +72,19 @@ public class TestBuilder {
                 .build();
 
         return notification;
+    }
+
+    public static Expense aRandomExpense() {
+
+        Expense expense = Expense.builder()
+                .description("Expense Description 1")
+                .datetimeOfExpense(LocalDateTime.now())
+                .amount(BigDecimal.valueOf(10.01))
+                .category(Category.builder()
+                        .name("Category 1")
+                        .build())
+                .build();
+
+        return expense;
     }
 }
