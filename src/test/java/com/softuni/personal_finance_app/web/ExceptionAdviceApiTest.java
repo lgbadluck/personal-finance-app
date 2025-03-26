@@ -1,10 +1,8 @@
 package com.softuni.personal_finance_app.web;
 
-import com.softuni.personal_finance_app.enitity.Role;
 import com.softuni.personal_finance_app.exception.DomainException;
 import com.softuni.personal_finance_app.exception.FeignCallException;
 import com.softuni.personal_finance_app.exception.UsernameAlreadyExistException;
-import com.softuni.personal_finance_app.security.AuthenticatedUserDetails;
 import com.softuni.personal_finance_app.service.UserService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,14 +12,9 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
-import java.util.UUID;
-
-import static com.softuni.personal_finance_app.TestBuilder.aRandomUser;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
