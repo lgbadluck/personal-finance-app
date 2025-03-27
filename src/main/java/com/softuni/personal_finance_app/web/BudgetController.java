@@ -8,18 +8,24 @@ import com.softuni.personal_finance_app.service.UserService;
 import com.softuni.personal_finance_app.web.dto.BudgetRequest;
 import com.softuni.personal_finance_app.web.dto.ShareBudgetRequest;
 import com.softuni.personal_finance_app.web.mapper.DtoMapper;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.servlet.view.RedirectView;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.UUID;
 
+@Slf4j
 @Controller
 @RequestMapping("/budgets")
 public class BudgetController {
@@ -96,14 +102,19 @@ public class BudgetController {
     }
 
     @PostMapping()
-    public ModelAndView processBudgetRequest(@Valid BudgetRequest budgetRequest, BindingResult bindingResult,
+    public ModelAndView processBudgetRequest(@RequestBody @Valid BudgetRequest budgetRequest, BindingResult bindingResult,
                                                @AuthenticationPrincipal AuthenticatedUserDetails authenticatedUserDetails) {
 
-        if(bindingResult.hasErrors()) {
-            return new ModelAndView("add-budget");
-        }
-
         User user = userService.getById(authenticatedUserDetails.getUserId());
+
+        if(bindingResult.hasErrors()) {
+            ModelAndView modelAndView = new ModelAndView();
+            modelAndView.setViewName("add-budget");
+            modelAndView.addObject("budgetRequest", budgetRequest);
+            modelAndView.addObject("user", user);
+            modelAndView.addObject("activePage", "budgets-add");
+            return modelAndView;
+        }
 
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("redirect:/budgets");
@@ -151,10 +162,13 @@ public class BudgetController {
         return modelAndView;
     }
 
-    @PutMapping("/submitEdit")
+    @PutMapping("/submitEdit") // Endpoint returns ModelAndView but PUT redirect is made
     public ModelAndView processBudgetEditUpdate(@RequestParam("budgetId") UUID budgetId,
                                                 @RequestBody @Valid BudgetRequest budgetRequest, BindingResult bindingResult,
-                                             @AuthenticationPrincipal AuthenticatedUserDetails authenticatedUserDetails){
+                                                @AuthenticationPrincipal AuthenticatedUserDetails authenticatedUserDetails,
+                                                HttpServletResponse response){
+
+        log.info("Received BudgetRequest: {}", budgetRequest.toString());
 
         User user = userService.getById(authenticatedUserDetails.getUserId());
         Budget budget = budgetService.findBudgetById(budgetId);
@@ -178,9 +192,63 @@ public class BudgetController {
         }
 
         budgetService.updateBudget(budgetId, budgetRequest, user);
+        //budgetService.updateBudgetSpendingForUser(user);
 
-        return new ModelAndView("redirect:/budgets");
+        // Set 303 See Other status
+        response.setStatus(HttpServletResponse.SC_SEE_OTHER);
+
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("redirect:/budgets");
+        modelAndView.addObject("user", user);
+        modelAndView.addObject("activePage", "budgets");
+        return modelAndView;
     }
+
+//    @PutMapping("/submitEdit") // Endpoint returns RedirectView to avoid PUT redirect
+//    public RedirectView processBudgetEditUpdate(@RequestParam("budgetId") UUID budgetId,
+//                                                @RequestBody @Valid BudgetRequest budgetRequest,
+//                                                BindingResult bindingResult,
+//                                                @AuthenticationPrincipal AuthenticatedUserDetails authenticatedUserDetails,
+//                                                RedirectAttributes redirectAttributes,
+//                                                HttpServletResponse response) {
+//
+//        log.info("Received BudgetRequest: {}", budgetRequest.toString());
+//
+//        User user = userService.getById(authenticatedUserDetails.getUserId());
+//        Budget budget = budgetService.findBudgetById(budgetId);
+//
+//        if (bindingResult.hasErrors()) {
+//            LocalDateTime budgetEndDate = budgetService.getBudgetEndDate(budget, budget.getCreatedOn());
+//            HashMap<User, Double> totalAmount = new HashMap<>();
+//            totalAmount.put(user, 0.00);
+//
+//            redirectAttributes.addFlashAttribute("user", user);
+//            redirectAttributes.addFlashAttribute("budgetRequest", budgetRequest);
+//            redirectAttributes.addFlashAttribute("budgetId", budget.getId());
+//            redirectAttributes.addFlashAttribute("budget", budget);
+//            redirectAttributes.addFlashAttribute("budgetEndDate", budgetEndDate);
+//            redirectAttributes.addFlashAttribute("budgetStartDate", budget.getCreatedOn());
+//            redirectAttributes.addFlashAttribute("totalAmount", totalAmount);
+//
+//            RedirectView redirectView = new RedirectView("/edit-budget");
+//            redirectView.setStatusCode(HttpStatus.SEE_OTHER); // Set explicit 303 status code
+//            return redirectView;
+//        }
+//
+//        // Update budget logic
+//        budgetService.updateBudget(budgetId, budgetRequest, user);
+//
+//        // Add attributes for the redirect
+//        redirectAttributes.addFlashAttribute("user", user);
+//        redirectAttributes.addFlashAttribute("activePage", "budgets");
+//
+//        // Set explicit 303 See Other status for the final redirect
+//        response.setStatus(HttpServletResponse.SC_SEE_OTHER);
+//
+//        RedirectView redirectView = new RedirectView("/budgets");
+//        redirectView.setStatusCode(HttpStatus.SEE_OTHER); // Set explicit 303 status code
+//        return redirectView;
+//    }
 
     @GetMapping("/delete")
     public String delete(@RequestParam("budgetId") UUID budgetId,

@@ -1,23 +1,20 @@
 package com.softuni.personal_finance_app.web.dto;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.softuni.personal_finance_app.enitity.BudgetType;
 import com.softuni.personal_finance_app.enitity.Category;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.math.BigDecimal;
 import java.util.List;
 
-@Data
+@Getter
+@Setter
 @Builder
+@ToString
 @AllArgsConstructor
 @NoArgsConstructor
 public class BudgetRequest {
@@ -38,7 +35,9 @@ public class BudgetRequest {
     private BudgetType type;
 
     @NotNull(message = "Select at least 1 Category ")
+    @JsonDeserialize(contentUsing = CategoryDeserializer.class)
     private List<Category> selectedCategories;
 
     private boolean isRenewed;
+
 }

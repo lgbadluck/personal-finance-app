@@ -154,6 +154,7 @@ public class BudgetService {
         return budgetRepository.findById(budgetId).orElseThrow(() -> new DomainException("Can't find Budget id [%s]".formatted(budgetId.toString())));
     }
 
+    @Transactional
     public void updateBudget(UUID budgetId, BudgetRequest budgetRequest, User user) {
 
         Budget budget = budgetRepository.findById(budgetId).orElseThrow(() -> new DomainException("Can't find Expense id [%s]".formatted(budgetId.toString())));

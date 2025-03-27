@@ -1,5 +1,6 @@
 package com.softuni.personal_finance_app.web;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.softuni.personal_finance_app.enitity.*;
 import com.softuni.personal_finance_app.security.AuthenticatedUserDetails;
@@ -75,7 +76,7 @@ public class BudgetControllerApiTest {
         AuthenticatedUserDetails principal = new AuthenticatedUserDetails(userId, "User123", "123123", Role.USER, true);
         User randomUser = aRandomUser();
         Budget randomBudget = aRandomBudget();
-        List<Category> categoryList = List.of(aRandomCategory());
+        List<Category> categoryList = List.of(aRandomCategory(), aRandomCategory());
         BudgetRequest budgetRequest = BudgetRequest.builder()
                 .name("Budget Name 1")
                 .description("Budget Description 1")
@@ -87,6 +88,7 @@ public class BudgetControllerApiTest {
 
         // Serialize BudgetRequest to JSON
         ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         String requestBodyJson = objectMapper.writeValueAsString(budgetRequest);
 
 
@@ -104,9 +106,10 @@ public class BudgetControllerApiTest {
         // 2. Send Request
         mockMvc.perform(request)
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/budgets"));
+                .andExpect(redirectedUrl("/budgets?activePage=budgets"));
         verify(userService, times(1)).getById(any());
         verify(budgetService, times(1)).updateBudget(any(), any(), any());
+        //verify(budgetService, times(1)).updateBudgetSpendingForUser(any());
     }
 
     @Test
@@ -131,7 +134,7 @@ public class BudgetControllerApiTest {
 
         // Serialize BudgetRequest to JSON
         ObjectMapper objectMapper = new ObjectMapper();
-        String requestBodyJson = objectMapper.writeValueAsString(budgetRequest); // Missing param => Binding Error
+        String requestBodyJson = objectMapper.writeValueAsString(budgetRequest); // Missing filed "type" => Binding Error
 
         MockHttpServletRequestBuilder request = put("/budgets/submitEdit")
                 .param("budgetId", String.valueOf(budgetId))
@@ -150,6 +153,7 @@ public class BudgetControllerApiTest {
                 .andExpect(model().attributeExists("user", "budgetRequest", "budgetId"));
         verify(userService, times(1)).getById(any());
         verify(budgetService, never()).updateBudget(any(), any(), any());
+        //verify(budgetService, never()).updateBudgetSpendingForUser(any());
     }
 
     @Test
@@ -210,28 +214,28 @@ public class BudgetControllerApiTest {
         UUID userId = UUID.randomUUID();
         AuthenticatedUserDetails principal = new AuthenticatedUserDetails(userId, "User123", "123123", Role.USER, true);
 
-        Budget randomBudget = aRandomBudget();
-
+        User randomUser = aRandomUser();
+        List<Category> categoryList = List.of(aRandomCategory());
         BudgetRequest budgetRequest = BudgetRequest.builder()
-                .name(randomBudget.getName())
-                .description(randomBudget.getDescription())
-                .maxToSpend(randomBudget.getMaxToSpend())
-                .type(randomBudget.getType())
-                .selectedCategories(randomBudget.getCategories())
-                .isRenewed(randomBudget.isRenewed())
+                .name("Budget Name 1")
+                .description("Budget Description 1")
+                .maxToSpend(BigDecimal.valueOf(1000.01))
+                .type(BudgetType.MONTH) // .type(null)
+                .isRenewed(true)
+                .selectedCategories(categoryList)
                 .build();
 
+        // Serialize BudgetRequest to JSON
+        ObjectMapper objectMapper = new ObjectMapper();
+        String requestBodyJson = objectMapper.writeValueAsString(budgetRequest);
+
         MockHttpServletRequestBuilder request = post("/budgets")
-                .formField("name", budgetRequest.getName())
-                .formField("description", budgetRequest.getDescription())
-                .formField("maxToSpend",  String.valueOf(budgetRequest.getMaxToSpend()))
-                .formField("type",  String.valueOf(budgetRequest.getType()))
-                .formField("selectedCategories",  String.valueOf(budgetRequest.getSelectedCategories()))
-                .formField("isRenewed",  String.valueOf(budgetRequest.isRenewed()))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(requestBodyJson)
                 .with(user(principal))
                 .with(csrf());
 
-        when(userService.getById(any())).thenReturn(aRandomUser());
+        when(userService.getById(any())).thenReturn(randomUser);
 
         // 2. Send Request
         mockMvc.perform(request)
@@ -239,7 +243,7 @@ public class BudgetControllerApiTest {
                 .andExpect(redirectedUrl("/budgets"))
                 .andExpect(model().attributeExists("user"));;
         verify(userService, times(1)).getById(any());
-        verify(budgetService, never()).saveBudget(any(), any());
+        verify(budgetService, times(1)).saveBudget(any(), any());
     }
 
     @Test
@@ -249,16 +253,34 @@ public class BudgetControllerApiTest {
         UUID userId = UUID.randomUUID();
         AuthenticatedUserDetails principal = new AuthenticatedUserDetails(userId, "User123", "123123", Role.USER, true);
 
+        User randomUser = aRandomUser();
+        List<Category> categoryList = List.of(aRandomCategory());
+        BudgetRequest budgetRequest = BudgetRequest.builder()
+                .name("Budget Name 1")
+                .description("Budget Description 1")
+                .maxToSpend(BigDecimal.valueOf(1000.01))
+                .type(null) // .type(BudgetType.MONTH)
+                .isRenewed(true)
+                .selectedCategories(categoryList)
+                .build();
+
+        // Serialize BudgetRequest to JSON
+        ObjectMapper objectMapper = new ObjectMapper();
+        String requestBodyJson = objectMapper.writeValueAsString(budgetRequest); // Missing filed "type" => Binding Error
+
         MockHttpServletRequestBuilder request = post("/budgets")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(requestBodyJson)
                 .with(user(principal))
                 .with(csrf());
 
-        when(userService.getById(any())).thenReturn(aRandomUser());
+        when(userService.getById(any())).thenReturn(randomUser);
 
         // 2. Send Request
         mockMvc.perform(request)
                 .andExpect(status().isOk())
-                .andExpect(view().name("add-budget"));
+                .andExpect(view().name("add-budget"))
+                .andExpect(model().attributeExists("budgetRequest", "user", "activePage"));
         verify(userService, times(1)).getById(any());
         verify(budgetService, never()).saveBudget(any(), any());
     }

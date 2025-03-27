@@ -6,6 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
     <meta name="description" content=""/>
     <meta name="author" content=""/>
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
     <title>Edit Budget - Finance Tracker</title>
     <!-- Favicon-->
     <link rel="icon" type="image/x-icon" th:href="@{/assets/favicon.ico}"/>
@@ -41,7 +43,8 @@
     <div class="d-flex flex-column justify-content-start text-left gap-10">
         <div class="row">
             <div class="col-md-6 offset-md-3">
-                <form th:action="@{/budgets/submitEdit(budgetId=${budgetId})}" th:object="${budgetRequest}" th:method="PUT">
+                <form id="budgetForm" th:action="@{/budgets/submitEdit(budgetId=${budgetId})}" th:object="${budgetRequest}" th:method="PUT">
+                        <input type="hidden" id="budgetId" name="budgetId" th:value="${budgetId}" />
                         <div class="form-group">
                             <label for="name" class="text-left"><h6>Budget name</h6></label>
                             <input type="text" class="form-control" id="name" th:field="*{name}" required>
@@ -92,7 +95,7 @@
                         </div><br>
 
                         <input type="submit" class="btn btn-success" value="Submit" style="width: 30%;"/>
-                    </form>
+                </form>
             </div>
         </div>
     </div>
@@ -188,5 +191,59 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous"></script>
 <!-- Core theme JS-->
 <script th:src="@{/js/scripts.js}"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const form = document.getElementById("budgetForm");
+
+        form.addEventListener("submit", function (event) {
+            event.preventDefault(); // Prevent the form from reloading the page
+
+            const formData = new FormData(form); // Collect form data
+            const jsonObject = {};
+            const budgetId = document.getElementById("budgetId").value; // Access the value correctly
+
+            // Convert FormData to JSON
+            formData.forEach((value, key) => {
+                if (key === "selectedCategories") {
+                    // Convert multiple checkboxes into an array
+                    if (!jsonObject[key]) {
+                        jsonObject[key] = [];
+                    }
+                    jsonObject[key].push(value);
+                } else if (key === "renewed") {
+                    // Handle checkbox for boolean value
+                    jsonObject[key] = form.querySelector(`[name=${key}]`).checked;
+                } else {
+                    jsonObject[key] = value;
+                }
+            });
+
+            // Retrieve CSRF token and header name from meta tags
+            const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute("content");
+            const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute("content");
+            const endpoint = `/budgets/submitEdit?budgetId=${budgetId}`; // Include the budgetId in the endpoint
+
+            fetch(endpoint, { // Replace with your actual endpoint
+                method: "PUT", // "POST" Or "PUT" based on your endpoint
+                headers: {
+                    "Content-Type": "application/json",
+                    [csrfHeader]: csrfToken // Include the CSRF token in the headers
+                },
+                body: JSON.stringify(jsonObject)
+            }).then(response => {
+                if (response.redirected) {
+                    // If the response includes a redirect, navigate to the new location
+                    window.location.href = response.url;
+                } else if (response.ok) {
+                    console.log("Budget submitted successfully!");
+                } else {
+                    console.error("Failed to submit the budget");
+                }
+            }).catch(error => {
+                console.error("Error during fetch:", error);
+            });
+        });
+    });
+</script>
 </body>
 </html>

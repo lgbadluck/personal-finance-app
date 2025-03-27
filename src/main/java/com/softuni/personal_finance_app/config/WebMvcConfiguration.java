@@ -3,6 +3,7 @@ package com.softuni.personal_finance_app.config;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.web.SecurityFilterChain;
@@ -24,6 +25,7 @@ public class WebMvcConfiguration implements WebMvcConfigurer {
         http
                 .authorizeHttpRequests(matchers -> matchers
                         .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
+                        .requestMatchers(HttpMethod.PUT, "/budgets/submitEdit").authenticated()
                         .requestMatchers("/", "/register").permitAll()
                         .requestMatchers("/assets/img/piggy-bank-svgrepo.svg").permitAll()
                         .requestMatchers("/assets/favicon.ico").permitAll()
