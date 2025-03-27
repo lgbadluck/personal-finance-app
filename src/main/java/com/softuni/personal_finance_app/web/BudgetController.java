@@ -96,14 +96,19 @@ public class BudgetController {
     }
 
     @PostMapping()
-    public ModelAndView processBudgetRequest(@Valid BudgetRequest budgetRequest, BindingResult bindingResult,
+    public ModelAndView processBudgetRequest(@RequestBody @Valid BudgetRequest budgetRequest, BindingResult bindingResult,
                                                @AuthenticationPrincipal AuthenticatedUserDetails authenticatedUserDetails) {
 
-        if(bindingResult.hasErrors()) {
-            return new ModelAndView("add-budget");
-        }
-
         User user = userService.getById(authenticatedUserDetails.getUserId());
+
+        if(bindingResult.hasErrors()) {
+            ModelAndView modelAndView = new ModelAndView();
+            modelAndView.setViewName("add-budget");
+            modelAndView.addObject("budgetRequest", budgetRequest);
+            modelAndView.addObject("user", user);
+            modelAndView.addObject("activePage", "budgets-add");
+            return modelAndView;
+        }
 
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("redirect:/budgets");
