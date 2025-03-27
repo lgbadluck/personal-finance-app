@@ -21,11 +21,15 @@ public class CategoryDeserializer extends JsonDeserializer<Category> {
     public Category deserialize(JsonParser jsonParser, DeserializationContext context) throws IOException {
         JsonNode node = jsonParser.getCodec().readTree(jsonParser);
 
-        if (!node.has("id")) {
+        String id;
+        if (node.isTextual()) { // Handle plain string (UUID)
+            id = node.asText();
+        } else if (node.has("id")) { // Handle object with "id" field
+            id = node.get("id").asText();
+        } else {
             throw new IOException("ID is missing in the category JSON.");
         }
 
-        String id = node.get("id").asText();
         Category category = new Category();
         category.setId(UUID.fromString(id));
 
