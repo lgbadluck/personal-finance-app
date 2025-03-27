@@ -105,6 +105,8 @@ public class BudgetController {
     public ModelAndView processBudgetRequest(@RequestBody @Valid BudgetRequest budgetRequest, BindingResult bindingResult,
                                                @AuthenticationPrincipal AuthenticatedUserDetails authenticatedUserDetails) {
 
+        log.info("Received BudgetRequest: {}", budgetRequest.toString());
+
         User user = userService.getById(authenticatedUserDetails.getUserId());
 
         if(bindingResult.hasErrors()) {

@@ -6,6 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
     <meta name="description" content=""/>
     <meta name="author" content=""/>
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
     <title>Add Budget - Finance Tracker</title>
     <!-- Favicon-->
     <link rel="icon" type="image/x-icon" th:href="@{/assets/favicon.ico}"/>
@@ -41,7 +43,7 @@
     <div class="d-flex flex-column justify-content-start text-left gap-10">
         <div class="container d-flex  flex-column" style="width: 75vw">
             <div class="col-md-6 offset-md-3">
-                <form th:action="@{/budgets}" th:method="POST" th:object="${budgetRequest}">
+                <form id="newBudgetForm" th:action="@{/budgets}" th:method="POST" th:object="${budgetRequest}">
                     <div class="form-group">
                         <label for="name" class="text-left"><h6>Budget name</h6></label>
                         <input type="text" class="form-control" id="name" th:field="*{name}" required>
@@ -118,5 +120,60 @@
 
 <!-- Core theme JS-->
 <script th:src="@{/js/scripts.js}"></script>
+
+<!-- Script to make the BudgetRequest that comes as a Form into a JSON body request -->
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const form = document.getElementById("newBudgetForm");
+
+        form.addEventListener("submit", function (event) {
+            event.preventDefault(); // Prevent the form from reloading the page
+
+            const formData = new FormData(form); // Collect form data
+            const jsonObject = {};
+
+            // Convert FormData to JSON
+            formData.forEach((value, key) => {
+                if (key === "selectedCategories") {
+                    // Convert multiple checkboxes into an array
+                    if (!jsonObject[key]) {
+                        jsonObject[key] = [];
+                    }
+                    jsonObject[key].push(value);
+                } else if (key === "renewed") {
+                    // Handle checkbox for boolean value
+                    jsonObject[key] = form.querySelector(`[name=${key}]`).checked;
+                } else {
+                    jsonObject[key] = value;
+                }
+            });
+
+            // Retrieve CSRF token and header name from meta tags
+            const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute("content");
+            const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute("content");
+            const endpoint = `/budgets`; // Include the budgetId in the endpoint
+
+            fetch(endpoint, { // Replace with your actual endpoint
+                method: "POST", // "POST" Or "PUT" based on your endpoint
+                headers: {
+                    "Content-Type": "application/json",
+                    [csrfHeader]: csrfToken // Include the CSRF token in the headers
+                },
+                body: JSON.stringify(jsonObject)
+            }).then(response => {
+                if (response.redirected) {
+                    // If the response includes a redirect, navigate to the new location
+                    window.location.href = response.url;
+                } else if (response.ok) {
+                    console.log("Budget submitted successfully!");
+                } else {
+                    console.error("Failed to submit the budget");
+                }
+            }).catch(error => {
+                console.error("Error during fetch:", error);
+            });
+        });
+    });
+</script>
 </body>
 </html>
