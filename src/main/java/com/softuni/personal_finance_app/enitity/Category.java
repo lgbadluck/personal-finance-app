@@ -37,7 +37,7 @@ public class Category {
     @JsonIgnore // Exclude from serialization
     private List<Budget> budgets;
 
-    @OneToMany(mappedBy = "category")
+    @OneToMany(mappedBy = "category", fetch = FetchType.EAGER)
     @OrderBy("datetimeOfExpense DESC, createdOn DESC")
     @JsonIgnore // Exclude from serialization
     private List<Expense> expenses;

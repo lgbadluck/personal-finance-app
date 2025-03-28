@@ -130,7 +130,11 @@ public class BudgetService {
         }
     }
 
+    @Transactional
     public void saveBudget(BudgetRequest budgetRequest, User user) {
+
+            User managedUser = userRepository.findById(user.getId())
+                .orElseThrow(() -> new DomainException("User not found"));
 
             Budget budget = Budget.builder()
                     .name(budgetRequest.getName())
@@ -144,7 +148,7 @@ public class BudgetService {
                     .users(new ArrayList<>())
                     .build();
 
-            budget.addUser(user);
+            budget.addUser(managedUser);
 
             budgetRepository.save(budget);
     }

@@ -149,6 +149,8 @@ public class BudgetServiceUTest {
                 .budgets(new ArrayList<>())
                 .build();
 
+        when(userRepository.findById(any())).thenReturn(Optional.ofNullable(user));
+
         // When
         assertEquals(0, user.getBudgets().size());
         budgetService.saveBudget(BudgetRequest.builder().name("Budget 1").build(), user);
@@ -757,7 +759,7 @@ public class BudgetServiceUTest {
         Expense expense1 = Expense.builder()
                 .id(UUID.randomUUID())
                 .amount(BigDecimal.valueOf(12))
-                .datetimeOfExpense(LocalDateTime.now())
+                .datetimeOfExpense(LocalDateTime.now().plusDays(1))
                 .category(categoryUser1)
                 .build();
         Expense expense2 = Expense.builder()
@@ -769,7 +771,7 @@ public class BudgetServiceUTest {
         Expense expense3 = Expense.builder()
                 .id(UUID.randomUUID())
                 .amount(BigDecimal.valueOf(34))
-                .datetimeOfExpense(LocalDateTime.now())
+                .datetimeOfExpense(LocalDateTime.now().plusDays(1))
                 .category(categoryUser2)
                 .build();
         Expense expense4 = Expense.builder()

@@ -16,6 +16,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@Table(name = "users")
 public class User {
 
     @Id
@@ -44,11 +45,11 @@ public class User {
     @OneToOne
     private Client client;
 
-    @OneToMany(mappedBy = "categoryOwner")
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "categoryOwner") //, cascade = CascadeType.ALL)
     @OrderBy("createdOn ASC")
     private List<Category> categories;
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToMany(fetch = FetchType.EAGER) //, cascade = CascadeType.ALL)
     @JoinTable(
             name = "user_budget",
             joinColumns = @JoinColumn(name = "user_id"),

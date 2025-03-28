@@ -46,14 +46,16 @@ public class ExpenseEventListener {
                 case YEAR -> startDate.plusYears(1);
             };
 
-            boolean isCategoryInBudget = budget.getCategories().contains(expenseCategory);
+            boolean isCategoryInBudget = budget.getCategories()
+                    .stream()
+                    .anyMatch(category -> category.getId().equals(expenseCategory.getId()));
 
             if (isCategoryInBudget) {
                 message = "The Expense Category [%s] is part of Budget [%s]!".formatted(expenseCategory.getName(), budget.getName());
-
+                System.out.println(message);
 
                 if (expense.getDatetimeOfExpense().isAfter(startDate) && expense.getDatetimeOfExpense().isBefore(endDate) ) {
-                    System.out.printf("Expense [%s] of price: %.2f EUR is part of an Active Budget [%s\n",
+                    System.out.printf("Expense [%s] of price: %.2f EUR is part of an Active Budget [%s]\n",
                             expense.getDescription(), expense.getAmount(), budget.getName());
 
                     String emailSubject = "Expense maid for Budget - [%s]".formatted(budget.getName());
@@ -64,14 +66,12 @@ public class ExpenseEventListener {
 
                     for (User user : budget.getUsers()) {
                         notificationService.sendNotification(user.getId(), emailSubject, emailBody);
-                        log.info("Sending mail to user [%s]\n emailSubject - %s\n emailBody- %s \n".formatted(user.getId(), emailSubject, emailBody));
+                        log.info("Attempted to mail to user [%s]\n emailSubject - %s\n emailBody- %s".formatted(user.getId(), emailSubject, emailBody));
                     }
 
                 }
             }
         }
-
-        System.out.println(message);
     }
 
     private static String calculateBudgetSpending(Budget budget, Expense expense) {

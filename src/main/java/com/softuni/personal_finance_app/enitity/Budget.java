@@ -45,7 +45,7 @@ public class Budget {
     @Column(nullable = false)
     private boolean isRenewed;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "budget_category",
             joinColumns = @JoinColumn(name = "budget_id"),
@@ -53,7 +53,7 @@ public class Budget {
     @OrderBy("createdOn ASC")
     private List<Category> categories;
 
-    @ManyToMany(mappedBy = "budgets", cascade = CascadeType.ALL)
+    @ManyToMany(mappedBy = "budgets", fetch = FetchType.EAGER) //, cascade = CascadeType.ALL)
     private List<User> users = new ArrayList<>();
 
     @CreationTimestamp
