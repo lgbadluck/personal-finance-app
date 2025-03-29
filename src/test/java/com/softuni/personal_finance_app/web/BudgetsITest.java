@@ -6,10 +6,7 @@ import com.softuni.personal_finance_app.repository.BudgetRepository;
 import com.softuni.personal_finance_app.repository.CategoryRepository;
 import com.softuni.personal_finance_app.repository.ExpenseRepository;
 import com.softuni.personal_finance_app.repository.UserRepository;
-import com.softuni.personal_finance_app.service.BudgetService;
-import com.softuni.personal_finance_app.service.CategoryService;
-import com.softuni.personal_finance_app.service.ExpenseService;
-import com.softuni.personal_finance_app.service.UserService;
+import com.softuni.personal_finance_app.service.*;
 import com.softuni.personal_finance_app.web.dto.BudgetRequest;
 import com.softuni.personal_finance_app.web.dto.CategoryRequest;
 import com.softuni.personal_finance_app.web.dto.ExpenseRequest;
@@ -17,8 +14,10 @@ import com.softuni.personal_finance_app.web.dto.RegisterRequest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -27,6 +26,8 @@ import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doNothing;
 
 @ActiveProfiles("test")
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
@@ -36,11 +37,8 @@ public class BudgetsITest {
     @Autowired
     private UserRepository userRepository;
 
-    @Autowired
-    private ExpenseRepository expenseRepository;
-
-    @Autowired
-    private CategoryRepository categoryRepository;
+    @MockitoBean
+    private NotificationService notificationService;
 
     @Autowired
     private BudgetRepository budgetRepository;
@@ -57,13 +55,13 @@ public class BudgetsITest {
     @Autowired
     private BudgetService budgetService;
 
-    @Autowired
-    private ExpenseEventListener expenseEventListener;
-
     @Test
     void budgetEndsAndRenewed_happyPath() throws InterruptedException {
 
         // Given
+        doNothing().when(notificationService).sendNotification(any(), any(), any());
+        doNothing().when(notificationService).saveNotificationPreference(any(), any(Boolean.class), any());
+
         RegisterRequest registerRequest = new RegisterRequest();
         registerRequest.setUsername("User123");
         registerRequest.setPassword("123123");
@@ -131,6 +129,9 @@ public class BudgetsITest {
     void budgetSpentUpdatedOnExpenseCreatedEvent_happyPath() throws InterruptedException {
 
         // Given
+        doNothing().when(notificationService).sendNotification(any(), any(), any());
+        doNothing().when(notificationService).saveNotificationPreference(any(), any(Boolean.class), any());
+
         RegisterRequest registerRequest = new RegisterRequest();
         registerRequest.setUsername("User123");
         registerRequest.setPassword("123123");
