@@ -1,10 +1,7 @@
 package com.softuni.personal_finance_app.web;
 
 import com.softuni.personal_finance_app.enitity.*;
-import com.softuni.personal_finance_app.events.ExpenseEventListener;
 import com.softuni.personal_finance_app.repository.BudgetRepository;
-import com.softuni.personal_finance_app.repository.CategoryRepository;
-import com.softuni.personal_finance_app.repository.ExpenseRepository;
 import com.softuni.personal_finance_app.repository.UserRepository;
 import com.softuni.personal_finance_app.service.*;
 import com.softuni.personal_finance_app.web.dto.BudgetRequest;
@@ -14,7 +11,6 @@ import com.softuni.personal_finance_app.web.dto.RegisterRequest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
@@ -114,7 +110,7 @@ public class BudgetsITest {
         assertEquals(BudgetStatus.ACTIVE, budget.getStatus());
 
         // When && Then
-        budget.setCreatedOn(LocalDateTime.now().minusDays(8)); // Set the StartDate for the Budget so that i should be Completed now()
+        budget.setCreatedOn(LocalDateTime.now().minusDays(8)); // Set the StartDate for the Budget so that it should be Completed now()
         budgetRepository.saveAndFlush(budget);
 
         // Check for completed budgets and create a new budget if isRenewed
