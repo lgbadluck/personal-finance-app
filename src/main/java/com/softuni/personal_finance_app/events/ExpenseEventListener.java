@@ -56,7 +56,7 @@ public class ExpenseEventListener {
 
                 if (expense.getDatetimeOfExpense().isAfter(startDate) && expense.getDatetimeOfExpense().isBefore(endDate) ) {
                     System.out.printf("Expense [%s] of price: %.2f EUR is part of an Active Budget [%s]\n",
-                            expense.getDescription(), expense.getAmount(), budget.getName());
+                            expense.getDescription().trim(), expense.getAmount(), budget.getName());
 
                     String emailSubject = "Expense maid for Budget - [%s]".formatted(budget.getName());
                     String emailBody = "User [%s] made an expense in Budget [%s] for Amount: %.2f EUR\n"
@@ -86,11 +86,14 @@ public class ExpenseEventListener {
         String result = "You are under 25% of your budget.";
 
         // Check against thresholds
-        if (percentage.compareTo(BigDecimal.valueOf(25)) >= 0) {
+        if (percentage.compareTo(BigDecimal.valueOf(25)) > 0 &&
+                percentage.compareTo(BigDecimal.valueOf(50)) < 0) {
             result  = "You have spent above 25% of your budget.";
-        } else if (percentage.compareTo(BigDecimal.valueOf(50)) >= 0) {
+        } else if (percentage.compareTo(BigDecimal.valueOf(50)) >= 0 &&
+                percentage.compareTo(BigDecimal.valueOf(75)) < 0) {
             result  = "You have spent above 50% of your budget.";
-        } else if (percentage.compareTo(BigDecimal.valueOf(75)) >= 0) {
+        } else if (percentage.compareTo(BigDecimal.valueOf(75)) >= 0 &&
+                percentage.compareTo(BigDecimal.valueOf(100)) < 0) {
             result  = "You have spent above 75% of your budget.";
         } else if (percentage.compareTo(BigDecimal.valueOf(100)) >= 0 ) {
             result  = "You have reached or exceeded 100% of your budget!";

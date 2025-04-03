@@ -1,4 +1,4 @@
-package com.softuni.personal_finance_app.web;
+package com.softuni.personal_finance_app;
 
 import com.softuni.personal_finance_app.enitity.*;
 import com.softuni.personal_finance_app.repository.BudgetRepository;
